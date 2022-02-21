@@ -4,9 +4,9 @@
  * Date: 2021/7/8
  * Time: 10:54 PM
  */
-namespace nickbai\tp6curd\strategy;
+namespace czh9527\tp6curd\strategy;
 
-use nickbai\tp6curd\template\IAutoMake;
+use czh9527\tp6curd\template\IAutoMake;
 
 class AutoMakeStrategy
 {

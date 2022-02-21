@@ -4,10 +4,10 @@
  * Date: 2021/7/8
  * Time: 11:23 PM
  */
-namespace nickbai\tp6curd\template\impl;
+namespace czh9527\tp6curd\template\impl;
 
-use nickbai\tp6curd\extend\Utils;
-use nickbai\tp6curd\template\IAutoMake;
+use czh9527\tp6curd\extend\Utils;
+use czh9527\tp6curd\template\IAutoMake;
 use think\facade\App;
 use think\facade\Db;
 use think\console\Output;

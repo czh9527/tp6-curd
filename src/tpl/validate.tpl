@@ -2,7 +2,7 @@
 
 namespace app<namespace>validate;
 
-use nickbai\tp6curd\extend\ExtendValidate;
+use czh9527\tp6curd\extend\ExtendValidate;
 
 class <model>Validate extends ExtendValidate
 {

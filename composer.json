@@ -17,7 +17,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "nickbai\\tp6curd\\": "src"
+            "czh9527\\tp6curd\\": "src"
         },
         "files": [
             "src/helper.php"

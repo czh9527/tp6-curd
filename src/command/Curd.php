@@ -5,16 +5,16 @@
  * Time: 8:23 PM
  */
 
-namespace nickbai\tp6curd\command;
+namespace czh9527\tp6curd\command;
 
-use nickbai\tp6curd\strategy\AutoMakeStrategy;
-use nickbai\tp6curd\template\impl\ControllerAutoMake;
-use nickbai\tp6curd\template\impl\ModelAutoMake;
-use nickbai\tp6curd\template\impl\ValidateAutoMake;
-use think\console\Command;
-use think\console\Input;
-use think\console\input\Option;
-use think\console\Output;
+use czh9527\tp6curd\strategy\AutoMakeStrategy;
+use czh9527\tp6curd\template\impl\ControllerAutoMake;
+use czh9527\tp6curd\template\impl\ModelAutoMake;
+use czh9527\tp6curd\template\impl\ValidateAutoMake;
+use czh9527\console\Command;
+use czh9527\console\Input;
+use czh9527\console\input\Option;
+use czh9527\console\Output;
 
 class Curd extends Command
 {
