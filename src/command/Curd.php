@@ -11,10 +11,10 @@ use czh9527\tp6curd\strategy\AutoMakeStrategy;
 use czh9527\tp6curd\template\impl\ControllerAutoMake;
 use czh9527\tp6curd\template\impl\ModelAutoMake;
 use czh9527\tp6curd\template\impl\ValidateAutoMake;
-use czh9527\console\Command;
-use czh9527\console\Input;
-use czh9527\console\input\Option;
-use czh9527\console\Output;
+use think\console\Command;
+use think\console\Input;
+use think\console\input\Option;
+use think\console\Output;
 
 class Curd extends Command
 {
