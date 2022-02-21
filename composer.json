@@ -1,5 +1,5 @@
 {
-    "name": "czh/tp6-curd",
+    "name": "czh9527/tp6-curd",
     "description": "基于thinkphp6的一键curd库",
     "require": {
         "php": ">=7.1",
