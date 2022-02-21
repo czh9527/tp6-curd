@@ -1,5 +1,5 @@
 {
-    "name": "nickbai/tp6-curd",
+    "name": "czh/tp6-curd",
     "description": "基于thinkphp6的一键curd库",
     "require": {
         "php": ">=7.1",
@@ -11,8 +11,8 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "NickBai",
-            "email": "bai@suq.cn"
+            "name": "czh",
+            "email": "czh95270201@163.com"
         }
     ],
     "autoload": {
