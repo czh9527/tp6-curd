@@ -13,7 +13,7 @@ class <controller> extends BaseController
     /**
     * 获取列表
     */
-    public function getList(Request $request)
+    public function index(Request $request)
     {
         $<model>Model = new <model>Model();
 		$request_data=$request->param();
