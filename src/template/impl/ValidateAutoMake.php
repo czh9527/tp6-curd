@@ -40,11 +40,13 @@ class ValidateAutoMake implements IAutoMake
         $column = Db::query('SHOW FULL COLUMNS FROM `' . $prefix . $table . '`');
         $rule = [];
         $attributes = [];
-        $attrs = [];
         foreach ($column as $vo) {
-            $rule[$vo['Field']] = 'require';
-            $attributes[$vo['Field']] = '需要'.$vo['Comment'];
-            $zd[]=$vo['Field'];
+            if($vo['Field'] != 'id')
+            {
+                $rule[$vo['Field']] = 'require';
+                $attributes[$vo['Field']] = '需要'.$vo['Comment'];
+                $zd[]=$vo['Field'];
+            }
         }
 
         $ruleArr = VarExporter::export($rule);
