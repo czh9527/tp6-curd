@@ -44,7 +44,7 @@ class ValidateAutoMake implements IAutoMake
         foreach ($column as $vo) {
             $rule[$vo['Field']] = 'require';
             $attributes[$vo['Field']] = '需要'.$vo['Comment'];
-            $attrs=$vo['Field'];
+            $attrs[]=$vo['Field'];
         }
 
         $ruleArr = VarExporter::export($rule);
