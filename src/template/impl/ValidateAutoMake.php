@@ -44,10 +44,10 @@ class ValidateAutoMake implements IAutoMake
         foreach ($column as $vo) {
             $rule[$vo['Field']] = 'require';
             $attributes[$vo['Field']] = '需要'.$vo['Comment'];
-            $adds[]=$vo['Field'];
+            $edits[]=$vo['Field'];
             if($vo['Field'] != 'id')
             {
-                $edits[]=$vo['Field'];
+                $adds[]=$vo['Field'];
             }
         }
 
