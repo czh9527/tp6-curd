@@ -2,9 +2,9 @@
 
 namespace app<namespace>validate;
 
-use czh9527\tp6curd\extend\ExtendValidate;
+use think\Validate;
 
-class <model>Validate extends ExtendValidate
+class <model>Validate extends Validate
 {
     /**
      * 验证规则
@@ -18,7 +18,7 @@ class <model>Validate extends ExtendValidate
      * 验证场景
      */
     protected $scene = [
-        'add'  => <zds>,
-        'edit' => <zds>,
+        'add'  => <adds>,
+        'edit' => <edits>,
     ];
 }
