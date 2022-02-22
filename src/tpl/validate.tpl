@@ -18,7 +18,7 @@ class <model>Validate extends ExtendValidate
      * 验证场景
      */
     protected $scene = [
-        'add'  => <attrs>,
-        'edit' => <attrs>,
+        'add'  => <zds>,
+        'edit' => <zds>,
     ];
 }
