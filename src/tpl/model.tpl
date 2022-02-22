@@ -25,7 +25,7 @@ class <model> extends Model
     * @param $limit
     * @return array
     */
-    public function get<model>List($where, $limit)
+    public function get<model>List($where, $page_size)
     {
         try {
             $res = $this->where($where)->order('id', 'asc')->paginate($page_size);

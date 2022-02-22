@@ -36,7 +36,7 @@ class <controller> extends BaseController
     /**
     * 添加
     */
-    public function add()
+    public function add(Request $request)
     {
 		$<model>Model = new <model>Model();
         $request_data=$request->param();
@@ -56,7 +56,7 @@ class <controller> extends BaseController
     /**
     * 根据id查询信息
     */
-    public function read()
+    public function read(Request $request)
     {
 		$<model>Model = new <model>Model();
         $request_data=$request->param();
@@ -69,7 +69,7 @@ class <controller> extends BaseController
     /**
     * 编辑
     */
-    public function edit()
+    public function edit(Request $request)
     {
         $<model>Model = new <model>Model();
         $request_data=$request->param();
@@ -88,7 +88,7 @@ class <controller> extends BaseController
     /**
     * 删除
     */
-    public function del()
+    public function del(Request $request)
     {
         $<model>Model = new <model>Model();
         $request_data=$request->param();
