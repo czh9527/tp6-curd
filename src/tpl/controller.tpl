@@ -43,7 +43,7 @@ class <controller> extends BaseController
 
         // 检验完整性
         try {
-            validate(<model>Validate::class)->check($request_data);
+            validate(<model>Validate::class)->scene('add')->check($request_data);
         } catch (ValidateException $e) {
             return self::Error([],$e->getError().'~',400);
         }
@@ -76,7 +76,7 @@ class <controller> extends BaseController
 
         // 检验完整性
         try {
-            validate(<model>Validate::class)->check($request_data);
+            validate(<model>Validate::class)->scene('edit')->check($request_data);
         } catch (ValidateException $e) {
             return self::Error([],$e->getError().'~',400);
         }
