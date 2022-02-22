@@ -59,15 +59,15 @@ class ControllerAutoMake implements IAutoMake
 
         file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS . $controller . '.php', $tplContent);
 
-        // 检测base是否存在
-        if (!file_exists(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php')) {
-
-            $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/baseController.tpl';
-            $tplContent = file_get_contents($controllerTpl);
-
-            $tplContent = str_replace('<namespace>', $namespace, $tplContent);
-
-            file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php', $tplContent);
-        }
+        // 检测base是否存在--现在不创建babse
+//        if (!file_exists(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php')) {
+//
+//            $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/baseController.tpl';
+//            $tplContent = file_get_contents($controllerTpl);
+//
+//            $tplContent = str_replace('<namespace>', $namespace, $tplContent);
+//
+//            file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php', $tplContent);
+//        }
     }
 }

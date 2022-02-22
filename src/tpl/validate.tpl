@@ -6,7 +6,19 @@ use czh9527\tp6curd\extend\ExtendValidate;
 
 class <model>Validate extends ExtendValidate
 {
+    /**
+     * 验证规则
+     */
     protected $rule = <rule>;
-
-    protected $attributes = <attributes>;
+    /**
+     * 提示消息
+     */
+    protected $message = <attributes>;
+    /**
+     * 验证场景
+     */
+    protected $scene = [
+        'add'  => <attrs>,
+        'edit' => <attrs>,
+    ];
 }

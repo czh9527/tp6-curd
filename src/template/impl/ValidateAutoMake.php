@@ -40,9 +40,11 @@ class ValidateAutoMake implements IAutoMake
         $column = Db::query('SHOW FULL COLUMNS FROM `' . $prefix . $table . '`');
         $rule = [];
         $attributes = [];
+        $attrs = [];
         foreach ($column as $vo) {
             $rule[$vo['Field']] = 'require';
-            $attributes[$vo['Field']] = $vo['Comment'];
+            $attributes[$vo['Field']] = '需要'.$vo['Comment'];
+            $attrs=$vo['Field'];
         }
 
         $ruleArr = VarExporter::export($rule);
@@ -52,6 +54,7 @@ class ValidateAutoMake implements IAutoMake
         $tplContent = str_replace('<model>', $model, $tplContent);
         $tplContent = str_replace('<rule>', '' . $ruleArr, $tplContent);
         $tplContent = str_replace('<attributes>', $attributesArr, $tplContent);
+        $tplContent = str_replace('<attr>', $attrs,$tplContent);
 
         file_put_contents(App::getAppPath() . $filePath . DS . 'validate' . DS . $model . 'Validate.php', $tplContent);
     }

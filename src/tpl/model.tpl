@@ -2,10 +2,23 @@
 
 namespace app<namespace>model;
 
+use app<namespace>common\Output;
 use think\model;
 
 class <model> extends Model
 {
+	use Output;
+	/**
+     * 封装好的返回数据
+     */
+    public function returnData($res,$successStr="请求成功~",$errorStr="请求失败~")
+    {
+        if ($res) {
+            return self::Success($res,$successStr,200);
+        } else {
+            return self::Error($res,$errorStr,400);
+        }
+    }
     /**
     * 获取分页列表
     * @param $where
@@ -15,13 +28,11 @@ class <model> extends Model
     public function get<model>List($where, $limit)
     {
         try {
-
-            $list = $this->where($where)->order('<pk>', 'desc')->paginate($limit);
+            $res = $this->where($where)->order('id', 'asc')->paginate($page_size);
         } catch(\Exception $e) {
-            return dataReturn(-1, $e->getMessage());
+            return $this->returnData([]);
         }
-
-        return dataReturn(0, 'success', $list);
+        return $this->returnData($res);
     }
 
     /**
@@ -32,17 +43,11 @@ class <model> extends Model
     public function add<model>($param)
     {
         try {
-
-           // TODO 去重校验
-
-           $param['add_time'] = date('Y-m-d H:i:s');
-           $this->insert($param);
+            $res= $this->insert($param,true);
         } catch(\Exception $e) {
-
-           return dataReturn(-1, $e->getMessage());
+            return $this->returnData([]);
         }
-
-        return dataReturn(0, 'success');
+        return $this->returnData($res);
     }
 
     /**
@@ -53,14 +58,13 @@ class <model> extends Model
     public function get<model>ById($id)
     {
         try {
-
-            $info = $this->where('<pk>', $id)->find();
+            $res = $this->where('id', $id)->find();
         } catch(\Exception $e) {
 
-            return dataReturn(-1, $e->getMessage());
+            return $this->returnData([]);
         }
 
-        return dataReturn(0, 'success', $info);
+        return $this->returnData($res);
     }
 
     /**
@@ -71,17 +75,12 @@ class <model> extends Model
     public function edit<model>($param)
     {
         try {
-
-            // TODO 去重校验
-
-            $param['update_time'] = date('Y-m-d H:i:s');
-            $this->where('<pk>', $param['<pk>'])->update($param);
+            $res=$this->where('id', $param['id'])->update($param);
         } catch(\Exception $e) {
-
-            return dataReturn(-1, $e->getMessage());
+            return $this->returnData([]);
         }
 
-        return dataReturn(0, 'success');
+        return $this->returnData($res,"编辑成功~","当前数据不存在~");
     }
 
     /**
@@ -92,16 +91,13 @@ class <model> extends Model
     public function del<model>ById($id)
     {
         try {
-
             // TODO 不可删除校验
+            $res=$this->where('id', $id)->delete();
+        } catch(\Exception $e) {
+            return $this->returnData([]);
+        }
 
-            $this->where('<pk>', $id)->delete();
-         } catch(\Exception $e) {
-
-            return dataReturn(-1, $e->getMessage());
-         }
-
-        return dataReturn(0, 'success');
+        return $this->returnData($res);
     }
 }
 
