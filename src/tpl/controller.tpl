@@ -45,7 +45,7 @@ class <controller> extends BaseController
         try {
             validate(<model>Validate::class)->scene('add')->check($request_data);
         } catch (ValidateException $e) {
-            return self::Error([],$e->getError().'~',400);
+            return self::Error([],$e->getError(),400);
         }
 
         $res = $<model>Model->add<model>($request_data);
@@ -78,7 +78,7 @@ class <controller> extends BaseController
         try {
             validate(<model>Validate::class)->scene('edit')->check($request_data);
         } catch (ValidateException $e) {
-            return self::Error([],$e->getError().'~',400);
+            return self::Error([],$e->getError(),400);
         }
 
         $res = $<model>Model->edit<model>($request_data);
