@@ -8,6 +8,8 @@ composer require czh9527/tp6-curd
 
 ### 如何使用
 > php think curd -t table名 -c 控制器名 -p 模块名
+>
+> 其中-c,-p默认为table和当前路径
 
 
 `-t` 表名，你要基于哪个表生成 curd，比如 `x_node`,则输入 `-t node`   

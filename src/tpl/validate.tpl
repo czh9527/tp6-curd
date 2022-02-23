@@ -4,7 +4,7 @@ namespace app<namespace>validate;
 
 use think\Validate;
 
-class <model>Validate extends Validate
+class <model> extends Validate
 {
     /**
      * 验证规则

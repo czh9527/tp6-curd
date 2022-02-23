@@ -38,8 +38,7 @@ class Curd extends Command
 
         $controller = $input->getOption('name');
         if (!$controller) {
-            $controller = Utils::camelize($table);
-            exit;
+            $controller = ucfirst(Utils::camelize($table));
         }
 
         $path = $input->getOption('path');
