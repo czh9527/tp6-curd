@@ -7,6 +7,7 @@
 
 namespace czh9527\tp6curd\command;
 
+use czh9527\tp6curd\extend\Utils;
 use czh9527\tp6curd\strategy\AutoMakeStrategy;
 use czh9527\tp6curd\template\impl\ControllerAutoMake;
 use czh9527\tp6curd\template\impl\ModelAutoMake;
@@ -37,7 +38,7 @@ class Curd extends Command
 
         $controller = $input->getOption('name');
         if (!$controller) {
-            $output->error("请输入 -c 控制器名");
+            $controller = Utils::camelize($table);
             exit;
         }
 

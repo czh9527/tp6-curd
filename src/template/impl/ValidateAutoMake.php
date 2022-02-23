@@ -63,6 +63,6 @@ class ValidateAutoMake implements IAutoMake
         $tplContent = str_replace('<adds>', $addsArr,$tplContent);
         $tplContent = str_replace('<edits>', $editsArr,$tplContent);
 
-        file_put_contents(App::getAppPath() . $filePath . DS . 'validate' . DS . $model . 'Validate.php', $tplContent);
+        file_put_contents(App::getAppPath() . $filePath . DS . 'validate' . DS . $model . '.php', $tplContent);
     }
 }

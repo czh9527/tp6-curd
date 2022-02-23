@@ -4,7 +4,7 @@ namespace app<namespace>controller;
 
 use app<namespace>exception\BaseController;
 use app<namespace>model\<model> as <model>Model;
-use app<namespace>validate\<model>Validate;
+use app<namespace>validate\<model> as <model>Validate;
 use think\exception\ValidateException;
 use think\Request;
 
