@@ -60,9 +60,9 @@ class <controller> extends BaseController
     {
 		$<model>Model = new <model>Model();
         $request_data=$request->param();
-        $id=$request_data['id'];
+        $<pk>=$request_data['<pk>'];
 		
-        $res = $<model>Model->get<model>ById($id);
+        $res = $<model>Model->get<model>By<pk>($<pk>);
         return $res;
     }
 
@@ -92,9 +92,9 @@ class <controller> extends BaseController
     {
         $<model>Model = new <model>Model();
         $request_data=$request->param();
-        $id = $request_data['id'];
+        $<pk> = $request_data['<pk>'];
 
-        $res = $<model>Model->del<model>ById($id);
+        $res = $<model>Model->del<model>By<pk>($<pk>);
         return $res;
    }
 }

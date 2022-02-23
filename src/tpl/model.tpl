@@ -17,7 +17,7 @@ class <model> extends Model
     public function get<model>List($where, $page_size)
     {
         try {
-            $res = $this->where($where)->order('id', 'asc')->paginate($page_size);
+            $res = $this->where($where)->order('<pk>', 'asc')->paginate($page_size);
         } catch(\Exception $e) {
             return self::Error([],"请求数据失败~",400);
         }
@@ -47,14 +47,14 @@ class <model> extends Model
     }
 
     /**
-    * 根据id获取信息
-    * @param $id
+    * 根据<pk>获取信息
+    * @param $<pk>
     * @return array
     */
-    public function get<model>ById($id)
+    public function get<model>By<pk>($<pk>)
     {
         try {
-            $res = $this->where('id', $id)->find();
+            $res = $this->where('<pk>', $<pk>)->find();
         } catch(\Exception $e) {
 
             return self::Error([],"查询数据失败~",400);
@@ -78,7 +78,7 @@ class <model> extends Model
     public function edit<model>($param)
     {
         try {
-            $res=$this->where('id', $param['id'])->update($param);
+            $res=$this->where('<pk>', $param['<pk>'])->update($param);
         } catch(\Exception $e) {
             return self::Error([],"编辑失败~",400);
         }
@@ -94,14 +94,14 @@ class <model> extends Model
 
     /**
     * 删除信息
-    * @param $id
+    * @param $<pk>
     * @return array
     */
-    public function del<model>ById($id)
+    public function del<model>By<pk>($<pk>)
     {
         try {
             // TODO 不可删除校验
-            $res=$this->where('id', $id)->delete();
+            $res=$this->where('<pk>', $<pk>)->delete();
         } catch(\Exception $e) {
             return self::Error([],"删除失败~",400);
         }
@@ -111,7 +111,7 @@ class <model> extends Model
         }
         else
         {
-            return self::Success($res,"该数据不存在~",204);
+            return self::Success($res,"该数据已被删除~",204);
         }
     }
 }
