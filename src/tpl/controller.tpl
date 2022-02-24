@@ -2,98 +2,99 @@
 
 namespace app<namespace>controller;
 
+use app<namespace>exception\BaseController;
 use app<namespace>model\<model> as <model>Model;
-use app<namespace>validate\<model>Validate;
+use app<namespace>validate\<model> as <model>Validate;
 use think\exception\ValidateException;
+use think\Request;
 
-class <controller> extends Base
+class <controller> extends BaseController
 {
     /**
     * 获取列表
     */
-    public function getList()
+    public function index(Request $request)
     {
-        if (request()->isPost()) {
-
-            $limit  = input('post.limit');
-            $where = [];
-
-            $<model>Model = new <model>Model();
-            $list = $<model>Model->get<model>List($where, $limit);
-
-            return json(pageReturn($list));
+        $<model>Model = new <model>Model();
+		$request_data=$request->param();
+		
+        if(isset($request_data['in_search'])&&$request_data['in_search']!=''){
+            $where = [
+                //'title'=>['like',$request_data['in_search']],//需要修改
+                ];
+            $res = $<model>Model->get<model>List($where, $this->pageSize);
         }
+        else
+        {
+            $where = [];
+            $res = $<model>Model->get<model>List($where, $this->pageSize);
+        }
+		
+        return $res;
     }
 
     /**
     * 添加
     */
-    public function add()
+    public function add(Request $request)
     {
-        if (request()->isPost()) {
+		$<model>Model = new <model>Model();
+        $request_data=$request->param();
 
-            $param = input('post.');
-
-            // 检验完整性
-            try {
-                validate(<model>Validate::class)->check($param);
-            } catch (ValidateException $e) {
-                return jsonReturn(-1, $e->getError());
-            }
-
-            $<model>Model = new <model>Model();
-            $res = $<model>Model->add<model>($param);
-
-            return json($res);
+        // 检验完整性
+        try {
+            validate(<model>Validate::class)->scene('add')->check($request_data);
+        } catch (ValidateException $e) {
+            return self::Error([],$e->getError(),400);
         }
+
+        $res = $<model>Model->add<model>($request_data);
+        return $res;
+
     }
 
     /**
-    * 查询信息
+    * 根据<pk>查询信息
     */
-    public function read()
+    public function read(Request $request)
     {
-        $id = input('param.<pk>');
-
-        $<model>Model = new <model>Model();
-        $info = $<model>Model->get<model>ById($id);
-
-        return json($info);
+		$<model>Model = new <model>Model();
+        $request_data=$request->param();
+        $<pk>=$request_data['<pk>'];
+		
+        $res = $<model>Model->get<model>By<pk>($<pk>);
+        return $res;
     }
 
     /**
     * 编辑
     */
-    public function edit()
+    public function edit(Request $request)
     {
-         if (request()->isPost()) {
+        $<model>Model = new <model>Model();
+        $request_data=$request->param();
 
-            $param = input('post.');
+        // 检验完整性
+        try {
+            validate(<model>Validate::class)->scene('edit')->check($request_data);
+        } catch (ValidateException $e) {
+            return self::Error([],$e->getError(),400);
+        }
 
-            // 检验完整性
-            try {
-                validate(<model>Validate::class)->check($param);
-            } catch (ValidateException $e) {
-                return jsonReturn(-1, $e->getError());
-            }
-
-            $<model>Model = new <model>Model();
-            $res = $<model>Model->edit<model>($param);
-
-            return json($res);
-         }
+        $res = $<model>Model->edit<model>($request_data);
+        return $res;
     }
 
     /**
     * 删除
     */
-    public function del()
+    public function del(Request $request)
     {
-        $id = input('param.<pk>');
-
         $<model>Model = new <model>Model();
-        $info = $<model>Model->del<model>ById($id);
+        $request_data=$request->param();
+        $<pk> = $request_data['<pk>'];
 
-        return json($info);
+        $res = $<model>Model->del<model>By<pk>($<pk>);
+        return $res;
    }
 }

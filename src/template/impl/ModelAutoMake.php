@@ -4,10 +4,10 @@
  * Date: 2021/7/8
  * Time: 11:23 PM
  */
-namespace nickbai\tp6curd\template\impl;
+namespace czh9527\tp6curd\template\impl;
 
-use nickbai\tp6curd\extend\Utils;
-use nickbai\tp6curd\template\IAutoMake;
+use czh9527\tp6curd\extend\Utils;
+use czh9527\tp6curd\template\IAutoMake;
 use think\facade\App;
 use think\facade\Db;
 use think\console\Output;
@@ -27,23 +27,25 @@ class ModelAutoMake implements IAutoMake
 
         if (file_exists($modelFilePath)) {
             $output = new Output();
-            $output->error("$modelName.php已经存在");
+            $output->error("\033[31m"."$modelFilePath 已经存在"."\033[0m");
             exit;
         }
     }
 
-    public function make($table, $path, $other)
+    public function make($table, $path, $relations)
     {
+
         $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/model.tpl';
         $tplContent = file_get_contents($controllerTpl);
+        $relationContent = file_get_contents(dirname(dirname(__DIR__)) . '/tpl/relation.tpl');
 
         $model = ucfirst(Utils::camelize($table));
         $filePath = empty($path) ? '' : DS . $path;
         $namespace = empty($path) ? '\\' : '\\' . $path . '\\';
-
+        
         $prefix = config('database.connections.mysql.prefix');
         $column = Db::query('SHOW FULL COLUMNS FROM `' . $prefix . $table . '`');
-        $pk = '';
+        $pk = 'id';
         foreach ($column as $vo) {
             if ($vo['Key'] == 'PRI') {
                 $pk = $vo['Field'];
@@ -55,6 +57,22 @@ class ModelAutoMake implements IAutoMake
         $tplContent = str_replace('<model>', $model, $tplContent);
         $tplContent = str_replace('<pk>', $pk, $tplContent);
 
-        file_put_contents(App::getAppPath() . $path . DS . 'model' . DS . $model . '.php', $tplContent);
+        if(count($relations)!=0)
+        {
+            $relationContent = str_replace('<table>', $relations[0], $relationContent);
+            $relationContent = str_replace('<tableName>', $relations[1], $relationContent);
+            $relationContent = str_replace('<foreignTable>', $relations[2], $relationContent);
+            $relationContent = str_replace('<foreignName>', $relations[3], $relationContent);
+            $tplContent = str_replace('<relations>', $relationContent, $tplContent);
+        }else
+        {
+            $tplContent = str_replace('<relations>', '', $tplContent);
+        }
+
+
+
+     
+        $file =App::getAppPath() . $filePath . DS . 'model' . DS . $model . '.php';
+        return file_put_contents($file, $tplContent);
     }
 }

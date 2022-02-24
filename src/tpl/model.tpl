@@ -2,26 +2,35 @@
 
 namespace app<namespace>model;
 
+use app<namespace>common\Output;
 use think\model;
 
 class <model> extends Model
 {
+	use Output;
+    <relations>
+
     /**
     * 获取分页列表
     * @param $where
     * @param $limit
     * @return array
     */
-    public function get<model>List($where, $limit)
+    public function get<model>List($where, $page_size)
     {
         try {
-
-            $list = $this->where($where)->order('<pk>', 'desc')->paginate($limit);
+            $res = $this->where($where)->order('<pk>', 'asc')->paginate($page_size);
         } catch(\Exception $e) {
-            return dataReturn(-1, $e->getMessage());
+            return self::Error([],"请求数据失败~",400);
         }
-
-        return dataReturn(0, 'success', $list);
+        if($res->isEmpty())
+        {
+            return self::Success([],"请求数据为空~",204);
+        }
+        else
+        {
+            return self::Success($res,"请求数据成功~",200);
+        }
     }
 
     /**
@@ -32,35 +41,35 @@ class <model> extends Model
     public function add<model>($param)
     {
         try {
-
-           // TODO 去重校验
-
-           $param['add_time'] = date('Y-m-d H:i:s');
-           $this->insert($param);
+            $res= $this->insert($param,true);
         } catch(\Exception $e) {
-
-           return dataReturn(-1, $e->getMessage());
+            return self::Error([],"新增失败~",400);
         }
-
-        return dataReturn(0, 'success');
+        return self::Success($res,"新增成功~",200);
     }
 
     /**
-    * 根据id获取信息
-    * @param $id
+    * 根据<pk>获取信息
+    * @param $<pk>
     * @return array
     */
-    public function get<model>ById($id)
+    public function get<model>By<pk>($<pk>)
     {
         try {
-
-            $info = $this->where('<pk>', $id)->find();
+            $res = $this->where('<pk>', $<pk>)->find();
         } catch(\Exception $e) {
 
-            return dataReturn(-1, $e->getMessage());
+            return self::Error([],"查询数据失败~",400);
         }
 
-        return dataReturn(0, 'success', $info);
+        if(!$res)
+        {
+            return self::Success([],"查询数据为空~",204);
+        }
+        else
+        {
+            return self::Success($res,"查询数据成功~",200);
+        }
     }
 
     /**
@@ -71,37 +80,41 @@ class <model> extends Model
     public function edit<model>($param)
     {
         try {
-
-            // TODO 去重校验
-
-            $param['update_time'] = date('Y-m-d H:i:s');
-            $this->where('<pk>', $param['<pk>'])->update($param);
+            $res=$this->where('<pk>', $param['<pk>'])->update($param);
         } catch(\Exception $e) {
-
-            return dataReturn(-1, $e->getMessage());
+            return self::Error([],"编辑失败~",400);
         }
-
-        return dataReturn(0, 'success');
+        if($res)
+        {
+            return self::Success($res,"编辑成功~",200);
+        }
+        else
+        {
+            return self::Success($res,"该数据不存在~",204);
+        }
     }
 
     /**
     * 删除信息
-    * @param $id
+    * @param $<pk>
     * @return array
     */
-    public function del<model>ById($id)
+    public function del<model>By<pk>($<pk>)
     {
         try {
-
             // TODO 不可删除校验
-
-            $this->where('<pk>', $id)->delete();
-         } catch(\Exception $e) {
-
-            return dataReturn(-1, $e->getMessage());
-         }
-
-        return dataReturn(0, 'success');
+            $res=$this->where('<pk>', $<pk>)->delete();
+        } catch(\Exception $e) {
+            return self::Error([],"删除失败~",400);
+        }
+        if($res)
+        {
+            return self::Success($res,"删除成功~",200);
+        }
+        else
+        {
+            return self::Success($res,"该数据已被删除~",204);
+        }
     }
 }
 

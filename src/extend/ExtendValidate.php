@@ -4,7 +4,7 @@
  * Date: 2021/7/8
  * Time: 8:18 PM
  */
-namespace nickbai\tp6curd\extend;
+namespace czh9527\tp6curd\extend;
 
 use think\exception\ValidateException;
 use think\Validate;

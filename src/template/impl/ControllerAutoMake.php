@@ -4,10 +4,10 @@
  * Date: 2021/7/8
  * Time: 10:49 PM
  */
-namespace nickbai\tp6curd\template\impl;
+namespace czh9527\tp6curd\template\impl;
 
-use nickbai\tp6curd\extend\Utils;
-use nickbai\tp6curd\template\IAutoMake;
+use czh9527\tp6curd\extend\Utils;
+use czh9527\tp6curd\template\IAutoMake;
 use think\facade\App;
 use think\facade\Db;
 use think\console\Output;
@@ -27,7 +27,7 @@ class ControllerAutoMake implements IAutoMake
         
         if (file_exists($controllerFilePath)) {
             $output = new Output();
-            $output->error("$controller.php已经存在");
+            $output->error("\033[31m"."$controllerFilePath 已经存在"."\033[0m");
             exit;
         }
     }
@@ -44,7 +44,7 @@ class ControllerAutoMake implements IAutoMake
 
         $prefix = config('database.connections.mysql.prefix');
         $column = Db::query('SHOW FULL COLUMNS FROM `' . $prefix . $table . '`');
-        $pk = '';
+        $pk = 'id';
         foreach ($column as $vo) {
             if ($vo['Key'] == 'PRI') {
                 $pk = $vo['Field'];
@@ -57,17 +57,18 @@ class ControllerAutoMake implements IAutoMake
         $tplContent = str_replace('<model>', $model, $tplContent);
         $tplContent = str_replace('<pk>', $pk, $tplContent);
 
-        file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS . $controller . '.php', $tplContent);
+        $file =App::getAppPath() . $filePath . DS . 'controller' . DS . $controller . '.php';
+        return file_put_contents($file, $tplContent);
 
-        // 检测base是否存在
-        if (!file_exists(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php')) {
-
-            $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/baseController.tpl';
-            $tplContent = file_get_contents($controllerTpl);
-
-            $tplContent = str_replace('<namespace>', $namespace, $tplContent);
-
-            file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php', $tplContent);
-        }
+        // 检测base是否存在--现在不创建babse
+//        if (!file_exists(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php')) {
+//
+//            $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/baseController.tpl';
+//            $tplContent = file_get_contents($controllerTpl);
+//
+//            $tplContent = str_replace('<namespace>', $namespace, $tplContent);
+//
+//            file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php', $tplContent);
+//        }
     }
 }

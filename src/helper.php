@@ -2,7 +2,7 @@
 
 \think\Console::starting(function (\think\Console $console) {
     $console->addCommands([
-        'curd' => '\\nickbai\\tp6curd\\command\\Curd'
+        'curd' => '\\czh9527\\tp6curd\\command\\Curd'
     ]);
 });
 

@@ -2,11 +2,23 @@
 
 namespace app<namespace>validate;
 
-use nickbai\tp6curd\extend\ExtendValidate;
+use think\Validate;
 
-class <model>Validate extends ExtendValidate
+class <model> extends Validate
 {
+    /**
+     * 验证规则
+     */
     protected $rule = <rule>;
-
-    protected $attributes = <attributes>;
+    /**
+     * 提示消息
+     */
+    protected $message = <attributes>;
+    /**
+     * 验证场景
+     */
+    protected $scene = [
+        'add'  => <adds>,
+        'edit' => <edits>,
+    ];
 }

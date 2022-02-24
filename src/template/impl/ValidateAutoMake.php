@@ -1,9 +1,9 @@
 <?php
 
-namespace nickbai\tp6curd\template\impl;
+namespace czh9527\tp6curd\template\impl;
 
-use nickbai\tp6curd\extend\Utils;
-use nickbai\tp6curd\template\IAutoMake;
+use czh9527\tp6curd\extend\Utils;
+use czh9527\tp6curd\template\IAutoMake;
 use Symfony\Component\VarExporter\VarExporter;
 use think\console\Output;
 use think\facade\App;
@@ -13,7 +13,7 @@ class ValidateAutoMake implements IAutoMake
 {
     public function check($table, $path)
     {
-        $validateName = Utils::camelize($table) . 'Validate';
+        $validateName = Utils::camelize($table) ;
         $validateFilePath = App::getAppPath() . $path . DS . 'validate' . DS . $validateName . '.php';
 
         if (!is_dir(App::getAppPath() . $path . DS . 'validate')) {
@@ -22,7 +22,7 @@ class ValidateAutoMake implements IAutoMake
 
         if (file_exists($validateFilePath)) {
             $output = new Output();
-            $output->error("$validateName.php已经存在");
+            $output->error("\033[31m"."$validateFilePath 已经存在"."\033[0m");
             exit;
         }
     }
@@ -40,19 +40,36 @@ class ValidateAutoMake implements IAutoMake
         $column = Db::query('SHOW FULL COLUMNS FROM `' . $prefix . $table . '`');
         $rule = [];
         $attributes = [];
+        $pk = 'id';
+        foreach ($column as $vo) {
+            if ($vo['Key'] == 'PRI') {
+                $pk = $vo['Field'];
+                break;
+            }
+        }
         foreach ($column as $vo) {
             $rule[$vo['Field']] = 'require';
-            $attributes[$vo['Field']] = $vo['Comment'];
+            $attributes[$vo['Field']] = '需要'.$vo['Comment'].'~';
+            $edits[]=$vo['Field'];
+            if($vo['Field'] != $pk)
+            {
+                $adds[]=$vo['Field'];
+            }
         }
 
         $ruleArr = VarExporter::export($rule);
         $attributesArr = VarExporter::export($attributes);
+        $addsArr = VarExporter::export($adds);
+        $editsArr = VarExporter::export($edits);
 
         $tplContent = str_replace('<namespace>', $namespace, $tplContent);
         $tplContent = str_replace('<model>', $model, $tplContent);
         $tplContent = str_replace('<rule>', '' . $ruleArr, $tplContent);
         $tplContent = str_replace('<attributes>', $attributesArr, $tplContent);
+        $tplContent = str_replace('<adds>', $addsArr,$tplContent);
+        $tplContent = str_replace('<edits>', $editsArr,$tplContent);
 
-        file_put_contents(App::getAppPath() . $filePath . DS . 'validate' . DS . $model . 'Validate.php', $tplContent);
+        $file =App::getAppPath() . $filePath . DS . 'validate' . DS . $model . '.php';
+        return file_put_contents($file, $tplContent);
     }
 }

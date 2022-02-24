@@ -4,7 +4,7 @@
  * Date: 2021/7/8
  * Time: 11:44 PM
  */
-namespace nickbai\tp6curd\extend;
+namespace czh9527\tp6curd\extend;
 
 class Utils
 {
