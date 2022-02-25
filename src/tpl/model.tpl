@@ -111,8 +111,7 @@ class <model> extends Model
     */
     public function del<model>By<pk>($<pk>)
     {
-        try {
-            <relationDelModel>
+        try { <relationDelModel>
             // TODO 不可删除校验
             $res=$this->where('<pk>', $<pk>)->delete();
         } catch(Exception $e) {

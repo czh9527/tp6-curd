@@ -1,6 +1,6 @@
 
     /**
-    * Notes: <table>主表:<tableName>,关联<foreignTable>附表:<foreignName>
+    * Notes: 主表:<table>的<tableName>字段,关联附表:<foreignTable>的<foreignName>字段
 	* Author: <user>
     */
     public function <wayName>()
