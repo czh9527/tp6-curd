@@ -61,7 +61,15 @@ class ValidateAutoMake implements IAutoMake
         $attributesArr = VarExporter::export($attributes);
         $addsArr = VarExporter::export($adds);
         $editsArr = VarExporter::export($edits);
-
+        
+        //确定注册的创建时间，创建人等
+        $user=get_current_user();
+        $date=date('Y-m-d');
+        $time=date('G:i');
+        $tplContent = str_replace('<user>', $user, $tplContent);
+        $tplContent = str_replace('<date>', $date, $tplContent);
+        $tplContent = str_replace('<time>', $time, $tplContent);
+        //
         $tplContent = str_replace('<namespace>', $namespace, $tplContent);
         $tplContent = str_replace('<model>', $model, $tplContent);
         $tplContent = str_replace('<rule>', '' . $ruleArr, $tplContent);

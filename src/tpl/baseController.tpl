@@ -1,4 +1,9 @@
 <?php
+/**
+ * Author: <user>
+ * Date: <date>
+ * Time: <time>
+ */
 
 namespace app<namespace>controller;
 

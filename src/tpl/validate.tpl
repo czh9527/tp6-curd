@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Author: <user>
+ * Date: <date>
+ * Time: <time>
+ */
+ 
 namespace app<namespace>validate;
 
 use think\Validate;
@@ -7,15 +12,18 @@ use think\Validate;
 class <model> extends Validate
 {
     /**
-     * 验证规则
+     * Notes: 验证规则
+	 * Author: <user>
      */
     protected $rule = <rule>;
     /**
-     * 提示消息
+     * Notes: 提示消息
+	 * Author: <user>
      */
     protected $message = <attributes>;
     /**
-     * 验证场景
+     * Notes: 验证场景
+	 * Author: <user>
      */
     protected $scene = [
         'add'  => <adds>,

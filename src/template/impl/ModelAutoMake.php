@@ -35,14 +35,33 @@ class ModelAutoMake implements IAutoMake
     public function make($table, $path, $relations)
     {
 
-        $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/model.tpl';
-        $tplContent = file_get_contents($controllerTpl);
-        $relationContent = file_get_contents(dirname(dirname(__DIR__)) . '/tpl/relation.tpl');
-
         $model = ucfirst(Utils::camelize($table));
+        if(count($relations)!=0)
+        {
+            if($relations[0]==$model)//使用f的情况，创建的是主表
+            {
+                $wayName=lcfirst($relations[2]);
+                $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/relationModel.tpl';
+            }
+            else//创建附表
+            {
+                $wayName=lcfirst($relations[0]);
+                $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/frelationModel.tpl';
+            }
+
+        }
+        else
+        {
+            $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/model.tpl';
+        }
+
+        $tplContent = file_get_contents($controllerTpl);
+
+
+        
         $filePath = empty($path) ? '' : DS . $path;
         $namespace = empty($path) ? '\\' : '\\' . $path . '\\';
-        
+
         $prefix = config('database.connections.mysql.prefix');
         $column = Db::query('SHOW FULL COLUMNS FROM `' . $prefix . $table . '`');
         $pk = 'id';
@@ -52,26 +71,31 @@ class ModelAutoMake implements IAutoMake
                 break;
             }
         }
-
+        
+        //确定注册的创建时间，创建人等
+        $user=get_current_user();
+        $date=date('Y-m-d');
+        $time=date('G:i');
+        $tplContent = str_replace('<user>', $user, $tplContent);
+        $tplContent = str_replace('<date>', $date, $tplContent);
+        $tplContent = str_replace('<time>', $time, $tplContent);
+        //
+        
         $tplContent = str_replace('<namespace>', $namespace, $tplContent);
         $tplContent = str_replace('<model>', $model, $tplContent);
         $tplContent = str_replace('<pk>', $pk, $tplContent);
 
         if(count($relations)!=0)
         {
-            $relationContent = str_replace('<table>', $relations[0], $relationContent);
-            $relationContent = str_replace('<tableName>', $relations[1], $relationContent);
-            $relationContent = str_replace('<foreignTable>', $relations[2], $relationContent);
-            $relationContent = str_replace('<foreignName>', $relations[3], $relationContent);
-            $tplContent = str_replace('<relations>', $relationContent, $tplContent);
-        }else
-        {
-            $tplContent = str_replace('<relations>', '', $tplContent);
+
+            $tplContent = str_replace('<table>', $relations[0], $tplContent);
+            $tplContent = str_replace('<tableName>', $relations[1], $tplContent);
+            $tplContent = str_replace('<foreignTable>', $relations[2], $tplContent);
+            $tplContent = str_replace('<foreignName>', $relations[3], $tplContent);
+            $tplContent = str_replace('<wayName>', $wayName, $tplContent);
         }
 
 
-
-     
         $file =App::getAppPath() . $filePath . DS . 'model' . DS . $model . '.php';
         return file_put_contents($file, $tplContent);
     }

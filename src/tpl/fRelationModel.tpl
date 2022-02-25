@@ -10,11 +10,21 @@ namespace app<namespace>model;
 use app<namespace>common\Output;
 use think\model;
 use Exception;
+
 class <model> extends Model
 {
 	use Output;
 	protected $pk = '<pk>';
 	
+    /**
+    * Notes: <foreigntable>附表:<foreignName>,依赖<table>主表:<tableName>
+	* Author: <user>
+    */
+    public function <wayName>()
+    {
+        return $this->belongsTo(<table>::class,'<foreignName>','<tableName>');
+    }
+
     /**
     * Notes: 获取分页列表
 	* Author: <user>
@@ -112,7 +122,6 @@ class <model> extends Model
     public function del<model>By<pk>($<pk>)
     {
         try {
-            // TODO 不可删除校验
             $res=$this->where('<pk>', $<pk>)->delete();
         } catch(Exception $e) {
             return self::Error([],"删除失败~",400);

@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Author: <user>
+ * Date: <date>
+ * Time: <time>
+ */
+ 
 namespace app<namespace>controller;
 
 use app<namespace>exception\BaseController;
@@ -11,7 +16,8 @@ use think\Request;
 class <controller> extends BaseController
 {
     /**
-    * 获取列表
+    * Notes: 获取列表
+	* Author: <user>
     */
     public function index(Request $request)
     {
@@ -20,7 +26,7 @@ class <controller> extends BaseController
 		
         if(isset($request_data['in_search'])&&$request_data['in_search']!=''){
             $where = [
-                //'title'=>['like',$request_data['in_search']],//需要修改
+                //['part_name','like',"%".$request_data['in_search']."%"],//TODO 需要更改
                 ];
             $res = $<model>Model->get<model>List($where, $this->pageSize);
         }
@@ -34,7 +40,8 @@ class <controller> extends BaseController
     }
 
     /**
-    * 添加
+    * Notes: 添加
+	* Author: <user>
     */
     public function add(Request $request)
     {
@@ -54,7 +61,8 @@ class <controller> extends BaseController
     }
 
     /**
-    * 根据<pk>查询信息
+    * Notes: 根据<pk>查询信息
+	* Author: <user>
     */
     public function read(Request $request)
     {
@@ -67,7 +75,8 @@ class <controller> extends BaseController
     }
 
     /**
-    * 编辑
+    * Notes: 编辑
+	* Author: <user>
     */
     public function edit(Request $request)
     {
@@ -86,7 +95,8 @@ class <controller> extends BaseController
     }
 
     /**
-    * 删除
+    * Notes: 删除
+	* Author: <user>
     */
     public function del(Request $request)
     {

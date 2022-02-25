@@ -16,6 +16,15 @@ class <model> extends Model
 	protected $pk = '<pk>';
 	
     /**
+    * Notes: <table>主表:<tableName>,关联<foreignTable>附表:<foreignName>
+	* Author: <user>
+    */
+    public function <wayName>()
+    {
+        return $this->hasOne(<foreignTable>::class,'<foreignName>','<tableName>');
+    }
+
+    /**
     * Notes: 获取分页列表
 	* Author: <user>
     * @param $where
@@ -112,7 +121,9 @@ class <model> extends Model
     public function del<model>By<pk>($<pk>)
     {
         try {
-            // TODO 不可删除校验
+            //删除附表信息
+            <foreignTable>::where('<foreignName>',$<tableName>)->delete();
+
             $res=$this->where('<pk>', $<pk>)->delete();
         } catch(Exception $e) {
             return self::Error([],"删除失败~",400);
