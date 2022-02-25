@@ -7,9 +7,12 @@ composer require czh9527/tp6-curd
 ```
 
 ### 如何使用
-> php think curd  -p 模块名 -t table名 -r 依赖表名 -f 外键表名
+> php think curd  -p 模块名 -t table名
 >
-> 其中-c,-p默认为table和当前路径
+> 自动生成model,controller,validate,
+> 支持hasOne和belongsTo的自动生成
+> 
+> 另外本地生成<表名.json>用于配合易文档创建传参
 
 
  
