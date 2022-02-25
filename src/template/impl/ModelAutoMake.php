@@ -35,30 +35,13 @@ class ModelAutoMake implements IAutoMake
     public function make($table, $path, $relations)
     {
 
-        $model = ucfirst(Utils::camelize($table));
-        if(count($relations)!=0)
-        {
-            if($relations[0]==$model)//使用f的情况，创建的是主表
-            {
-                $wayName=lcfirst($relations[2]);
-                $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/relationModel.tpl';
-            }
-            else//创建附表
-            {
-                $wayName=lcfirst($relations[0]);
-                $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/frelationModel.tpl';
-            }
-
-        }
-        else
-        {
-            $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/model.tpl';
-        }
+ 
+        $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/model.tpl';
 
         $tplContent = file_get_contents($controllerTpl);
 
 
-        
+        $model = ucfirst(Utils::camelize($table));
         $filePath = empty($path) ? '' : DS . $path;
         $namespace = empty($path) ? '\\' : '\\' . $path . '\\';
 
@@ -84,16 +67,83 @@ class ModelAutoMake implements IAutoMake
         $tplContent = str_replace('<namespace>', $namespace, $tplContent);
         $tplContent = str_replace('<model>', $model, $tplContent);
         $tplContent = str_replace('<pk>', $pk, $tplContent);
+    
+        //匹配关联表信息
 
-        if(count($relations)!=0)
+        
+        
+        
+        $relationModelData='';
+        $frelationModelData='';
+        $relationDelModelData='';
+        
+
+        
+        if(count($relations)!=0)//判断是否有关联关系
         {
+            
 
-            $tplContent = str_replace('<table>', $relations[0], $tplContent);
-            $tplContent = str_replace('<tableName>', $relations[1], $tplContent);
-            $tplContent = str_replace('<foreignTable>', $relations[2], $tplContent);
-            $tplContent = str_replace('<foreignName>', $relations[3], $tplContent);
-            $tplContent = str_replace('<wayName>', $wayName, $tplContent);
+            for($i=0;$i<count($relations)/4;$i++) {//循环输出
+                
+                if ($relations[0+$i*4] == $model)//创建的是主表
+                {
+                    $relationModel = file_get_contents(dirname(dirname(__DIR__)) . '/tpl/relationModel.tpl');
+                    $relationDelModel = file_get_contents(dirname(dirname(__DIR__)) . '/tpl/relationDelModel.tpl');
+                    
+                    $wayName = lcfirst($relations[2+$i*4]);
+    
+
+                    $relationModel = str_replace('<table>', $relations[0+$i*4], $relationModel);
+                    $relationModel = str_replace('<tableName>', $relations[1+$i*4], $relationModel);
+                    $relationModel = str_replace('<foreignTable>', $relations[2+$i*4], $relationModel);
+                    $relationModel = str_replace('<foreignName>', $relations[3+$i*4], $relationModel);
+                    
+                    $relationModel = str_replace('<wayName>', $wayName, $relationModel);
+                    
+
+                    $relationDelModel = str_replace('<tableName>', $relations[1+$i*4], $relationDelModel);
+                    $relationDelModel = str_replace('<foreignTable>', $relations[2+$i*4], $relationDelModel);
+                    $relationDelModel = str_replace('<foreignName>', $relations[3+$i*4], $relationDelModel);
+                  
+         
+   
+                    $relationModelData=$relationModelData.$relationModel;
+                    $relationDelModelData=$relationDelModelData.$relationDelModel;
+
+                    
+
+
+                } else//创建附表
+                {
+                    $frelationModel = file_get_contents(dirname(dirname(__DIR__)) . '/tpl/frelationModel.tpl');
+                    $wayName = lcfirst($relations[0+$i*4]);
+                    
+
+
+                    $frelationModel = str_replace('<table>', $relations[0+$i*4], $frelationModel);
+                    $frelationModel = str_replace('<tableName>', $relations[1+$i*4], $frelationModel);
+                    $frelationModel = str_replace('<foreignTable>', $relations[2+$i*4], $frelationModel);
+                    $frelationModel = str_replace('<foreignName>', $relations[3+$i*4], $frelationModel);
+                    
+                    $frelationModel = str_replace('<wayName>', $wayName, $frelationModel);
+                    $frelationModelData=$frelationModelData.$frelationModel;
+                }
+                
+            }
+            
+            $tplContent = str_replace('<frelationModel>', $frelationModelData, $tplContent);
+            $tplContent = str_replace('<relationModel>', $relationModelData, $tplContent);
+            $tplContent = str_replace('<relationDelModel>', $relationDelModelData, $tplContent);
+
+            
         }
+        else//没有关联关系，全部替换为空
+        {
+            $tplContent = str_replace('<frelationModel>', '', $tplContent);
+            $tplContent = str_replace('<relationModel>', '', $tplContent);
+            $tplContent = str_replace('<relationDelModel>', '', $tplContent);
+        }
+
 
 
         $file =App::getAppPath() . $filePath . DS . 'model' . DS . $model . '.php';

@@ -14,7 +14,7 @@ class <model> extends Model
 {
 	use Output;
 	protected $pk = '<pk>';
-	
+    <frelationModel><relationModel>
     /**
     * Notes: 获取分页列表
 	* Author: <user>
@@ -112,6 +112,7 @@ class <model> extends Model
     public function del<model>By<pk>($<pk>)
     {
         try {
+            <relationDelModel>
             // TODO 不可删除校验
             $res=$this->where('<pk>', $<pk>)->delete();
         } catch(Exception $e) {

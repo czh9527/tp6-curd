@@ -27,8 +27,6 @@ class Curd extends Command
             ->addOption('table', 't', Option::VALUE_OPTIONAL, '表名', null)
             ->addOption('path', 'p', Option::VALUE_OPTIONAL, '路径', null)
             ->addOption('delete', 'd', Option::VALUE_OPTIONAL, '删除curd文件', 0)
-            ->addOption('referencetable', 'r', Option::VALUE_OPTIONAL, '依赖的主表名', 0)
-            ->addOption('foreignTable', 'f', Option::VALUE_OPTIONAL, '关联外键表名', 0)
             ->setDescription('auto make curd file');
     }
 
@@ -81,52 +79,49 @@ class Curd extends Command
 
         //检查依赖表
         $relations=[];
-        $referencetable = $input->getOption('referencetable');
+ 
+        $prefix = config('database.connections.mysql.prefix');
+        $database=config('database.connections.mysql.database');
 
+        $sql='select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE t where t.TABLE_SCHEMA ='.'\''.$database.'\''.
+            'and TABLE_NAME='.'\''. $prefix.$table.'\'';//查找此表有无依赖表
+        $output->info($sql);
+    
+        $column = Db::query($sql);
+        $relations = [];
 
-
-        if($referencetable)
-        {
-            $prefix = config('database.connections.mysql.prefix');
-            $database=config('database.connections.mysql.database');
-
-            $sql='select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE t where t.TABLE_SCHEMA ='.'\''.$database.'\''.
-                ' and REFERENCED_TABLE_NAME='.'\''.$prefix.$referencetable.'\''.' and TABLE_NAME='.'\''. $prefix.$table.'\'';
-
-
-            $column = Db::query($sql);
-            $relations = [];
-
-            foreach ($column as $vo) {
+        foreach ($column as $vo) {
+            if($vo['REFERENCED_TABLE_NAME']!='')//查询值不为空才输出
+            {
                 $relations[]= ucfirst(Utils::camelize($vo['REFERENCED_TABLE_NAME']));
                 $relations[]=$vo['REFERENCED_COLUMN_NAME'];
                 $relations[]= ucfirst(Utils::camelize($vo['TABLE_NAME']));
                 $relations[]=$vo['COLUMN_NAME'];
             }
         }
+
+
         //检查外键表
-        $foreignTable = $input->getOption('foreignTable');
-        if($foreignTable)
-        {
-            $prefix = config('database.connections.mysql.prefix');
-            $database=config('database.connections.mysql.database');
+        
+        $prefix = config('database.connections.mysql.prefix');
+        $database=config('database.connections.mysql.database');
 
-            $sql='select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE t where t.TABLE_SCHEMA ='.'\''.$database.'\''.
-                ' and REFERENCED_TABLE_NAME='.'\''.$prefix.$table.'\''.' and TABLE_NAME='.'\''. $prefix.$foreignTable.'\'';
+        $sql='select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE t where t.TABLE_SCHEMA ='.'\''.$database.'\''.
+            ' and REFERENCED_TABLE_NAME='.'\''.$prefix.$table.'\'';
+    $output->info($sql);
 
-
-            $column = Db::query($sql);
-            $relations = [];
-
-            foreach ($column as $vo) {
-                $relations[]= ucfirst(Utils::camelize($vo['REFERENCED_TABLE_NAME']));
-                $relations[]=$vo['REFERENCED_COLUMN_NAME'];
-                $relations[]= ucfirst(Utils::camelize($vo['TABLE_NAME']));
-                $relations[]=$vo['COLUMN_NAME'];
+        $column = Db::query($sql);
+        
+        foreach ($column as $vo) {
+            if($vo['REFERENCED_TABLE_NAME']!='')//查询值不为空才输出
+            {
+                $relations[] = ucfirst(Utils::camelize($vo['REFERENCED_TABLE_NAME']));
+                $relations[] = $vo['REFERENCED_COLUMN_NAME'];
+                $relations[] = ucfirst(Utils::camelize($vo['TABLE_NAME']));
+                $relations[] = $vo['COLUMN_NAME'];
             }
         }
-
-
+//        exit;
         $context = new AutoMakeStrategy();
 
         // 执行生成controller策略
