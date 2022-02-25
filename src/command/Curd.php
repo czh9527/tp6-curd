@@ -85,7 +85,7 @@ class Curd extends Command
 
         $sql='select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE t where t.TABLE_SCHEMA ='.'\''.$database.'\''.
             'and TABLE_NAME='.'\''. $prefix.$table.'\'';//查找此表有无依赖表
-        $output->info($sql);
+
     
         $column = Db::query($sql);
         $relations = [];
@@ -108,7 +108,7 @@ class Curd extends Command
 
         $sql='select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE t where t.TABLE_SCHEMA ='.'\''.$database.'\''.
             ' and REFERENCED_TABLE_NAME='.'\''.$prefix.$table.'\'';
-    $output->info($sql);
+
 
         $column = Db::query($sql);
         

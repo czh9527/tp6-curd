@@ -41,6 +41,7 @@ class ValidateAutoMake implements IAutoMake
         $rule = [];
         $attributes = [];
         $pk = 'id';
+        $json=[];
         foreach ($column as $vo) {
             if ($vo['Key'] == 'PRI') {
                 $pk = $vo['Field'];
@@ -48,6 +49,24 @@ class ValidateAutoMake implements IAutoMake
             }
         }
         foreach ($column as $vo) {
+            //编辑json
+            if(strpos($vo['Type'],'int')!== false)
+            {
+                $json[$vo['Field']]=1;
+            }
+            else if(!strpos($vo['Type'],'varchar')!== false)
+            {
+                $json[$vo['Field']]='test';
+            }
+            else if(!strpos($vo['Type'],'float')!== false)
+            {
+                $json[$vo['Field']]=1;
+            }
+            else
+            {
+                $json[$vo['Field']]='修改';
+            }
+            /////
             $rule[$vo['Field']] = 'require';
             $attributes[$vo['Field']] = '需要'.$vo['Comment'].'~';
             $edits[]=$vo['Field'];
@@ -56,6 +75,8 @@ class ValidateAutoMake implements IAutoMake
                 $adds[]=$vo['Field'];
             }
         }
+
+        file_put_contents($table.".json",json_encode($json));//写外部json
 
         $ruleArr = VarExporter::export($rule);
         $attributesArr = VarExporter::export($attributes);
