@@ -32,7 +32,7 @@ class Curd extends Command
 
     protected function execute(Input $input, Output $output)
     {
-        
+
         !defined('DS') && define('DS', DIRECTORY_SEPARATOR);
         //获取表名
         $table = $input->getOption('table');
@@ -80,14 +80,14 @@ class Curd extends Command
 
         //检查依赖表
         $relations=[];
- 
+
         $prefix = config('database.connections.mysql.prefix');
         $database=config('database.connections.mysql.database');
 
         $sql='select * from INFORMATION_SCHEMA.KEY_COLUMN_USAGE t where t.TABLE_SCHEMA ='.'\''.$database.'\''.
             'and TABLE_NAME='.'\''. $prefix.$table.'\'';//查找此表有无依赖表
 
-    
+
         $column = Db::query($sql);
         $relations = [];
 
@@ -103,7 +103,7 @@ class Curd extends Command
 
 
         //检查外键表
-        
+
         $prefix = config('database.connections.mysql.prefix');
         $database=config('database.connections.mysql.database');
 
@@ -112,7 +112,7 @@ class Curd extends Command
 
 
         $column = Db::query($sql);
-        
+
         foreach ($column as $vo) {
             if($vo['REFERENCED_TABLE_NAME']!='')//查询值不为空才输出
             {
@@ -137,7 +137,8 @@ class Curd extends Command
 
         // 执行生成validate策略
         $context->Context(new ValidateAutoMake());
-        $context->executeStrategy($table, $path, $relations)?$output->info("\033[32m".$validateFile."创建成功"."\033[0m"):$output->info($conrollerFile."创建失败");
+        $context->executeStrategy($table, $path, $relations)?$output->info("\033[32m".$validateFile."创建成功"."\n".$jsonLogFile."创建成功"."\033[0m")
+            :$output->info($conrollerFile."创建失败");
 
 
     }
