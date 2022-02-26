@@ -31,7 +31,7 @@ class <model> extends Model
         }
         if($res->isEmpty())
         {
-            return self::Success([],"请求数据为空~",204);
+            return self::Success($res,"请求数据为空~",204);
         }
         else
         {
@@ -72,7 +72,7 @@ class <model> extends Model
 
         if(!$res)
         {
-            return self::Success([],"查询数据为空~",204);
+            return self::Success($res,"查询数据为空~",204);
         }
         else
         {
@@ -89,7 +89,14 @@ class <model> extends Model
     public function edit<model>($param)
     {
         try {
-            $res=$this->where('<pk>', $param['<pk>'])->update($param);
+		    if($this->where('<pk>', $param['<pk>'])->find())
+            {
+				$res=$this->where('<pk>', $param['<pk>'])->update($param);
+			}
+			else
+			{
+				return self::Error([],"不存在该数据~",204);
+			}
         } catch(Exception $e) {
             return self::Error([],"编辑失败~",400);
         }
@@ -99,7 +106,7 @@ class <model> extends Model
         }
         else
         {
-            return self::Success($res,"该数据不存在~",204);
+            return self::Success($res,"数据未发生改变~",204);
         }
     }
 

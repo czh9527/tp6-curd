@@ -26,8 +26,8 @@ class ValidateAutoMake implements IAutoMake
             exit;
         }
     }
-    
-    public function make($table, $path, $other)
+
+    public function make($table, $path, $relations)
     {
         $validateTpl = dirname(dirname(__DIR__)) . '/tpl/validate.tpl';
         $tplContent = file_get_contents($validateTpl);
@@ -42,6 +42,7 @@ class ValidateAutoMake implements IAutoMake
         $attributes = [];
         $pk = 'id';
         $json=[];
+        $Comment=[];
         foreach ($column as $vo) {
             if ($vo['Key'] == 'PRI') {
                 $pk = $vo['Field'];
@@ -67,22 +68,55 @@ class ValidateAutoMake implements IAutoMake
                 $json[$vo['Field']]='修改';
             }
             /////
-            $rule[$vo['Field']] = 'require';
-            $attributes[$vo['Field']] = '需要'.$vo['Comment'].'~';
+            $rule[$vo['Field'].'|'.$vo['Comment']] = 'require';
+            $Comment[$vo['Field']] = $vo['Comment'];
+//            $attributes[$vo['Field']] = '需要'.$vo['Comment'].'~';
             $edits[]=$vo['Field'];
             if($vo['Field'] != $pk)
             {
                 $adds[]=$vo['Field'];
             }
         }
+        /////czh
+        file_put_contents("1.log",'111111');
+        $addvalidateData= '';
+        if(count($relations)!=0)//判断是否有关联关系
+        {
+            for($i=0;$i<count($relations)/4;$i++) {//循环输出
+                
+                if ($relations[0+$i*4] == $model)//创建的是主表
+                {
+                    $tplContent = str_replace('<addValidate>', '', $tplContent);
+                } else//创建附表
+                {
 
-        file_put_contents($table.".json.log",json_encode($json));//写外部json
+                    
+                    $addvalidate = file_get_contents(dirname(dirname(__DIR__)) . '/tpl/addvalidate.tpl');
+
+                    $addvalidate = str_replace('<table>', $relations[0+$i*4], $addvalidate);
+                    $addvalidate = str_replace('<foreignName>', $relations[3+$i*4], $addvalidate);
+                    
+                    
+                    $rule[$relations[3+$i*4].'|'.$Comment[$relations[3+$i*4]]]=$rule[$relations[3+$i*4].'|'.$Comment[$relations[3+$i*4]]].'|'.'check'.$relations[0+$i*4];
+                    file_put_contents("1.log",'2222'.$addvalidate);
+                    $addvalidateData=$addvalidateData.$addvalidate;
+                    
+                }
+
+            }
+            file_put_contents("1.log",'3333');
+            $tplContent = str_replace('<addValidate>', $addvalidateData, $tplContent);
+        }
+
+        
+        file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS .
+            $table.".易文档传参.log",json_encode($json));//写外部json
 
         $ruleArr = VarExporter::export($rule);
         $attributesArr = VarExporter::export($attributes);
         $addsArr = VarExporter::export($adds);
         $editsArr = VarExporter::export($edits);
-        
+
         //确定注册的创建时间，创建人等
         $user=get_current_user();
         $date=date('Y-m-d');

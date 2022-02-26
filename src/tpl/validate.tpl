@@ -10,7 +10,7 @@ namespace app<namespace>validate;
 use think\Validate;
 
 class <model> extends Validate
-{
+{ <addValidate>
     /**
      * Notes: 验证规则
 	 * Author: <user>

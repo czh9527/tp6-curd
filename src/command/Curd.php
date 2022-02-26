@@ -53,11 +53,12 @@ class Curd extends Command
         $conrollerFile=App::getAppPath() . $path . DS . 'controller' . DS . $controller . '.php';
         $modelFile=App::getAppPath() . $path . DS . 'model' . DS . $controller . '.php';
         $validateFile=App::getAppPath() .  $path . DS . 'validate' . DS . $controller . '.php';
+        $jsonLogFile=App::getAppPath() .  $path . DS . 'controller' . DS . $table.'.易文档传参.log';
         //删除文件
         $delete = $input->getOption('delete');
         if ($delete) {
             $output->info("文件列表:");
-            $readyFiles = [$conrollerFile, $modelFile, $validateFile,];
+            $readyFiles = [$conrollerFile, $modelFile, $validateFile,$jsonLogFile];
             foreach ($readyFiles as $k => $v) {
                 $output->warning($v);
             }
@@ -136,7 +137,7 @@ class Curd extends Command
 
         // 执行生成validate策略
         $context->Context(new ValidateAutoMake());
-        $context->executeStrategy($table, $path, '')?$output->info("\033[32m".$validateFile."创建成功"."\033[0m"):$output->info($conrollerFile."创建失败");
+        $context->executeStrategy($table, $path, $relations)?$output->info("\033[32m".$validateFile."创建成功"."\033[0m"):$output->info($conrollerFile."创建失败");
 
 
     }
