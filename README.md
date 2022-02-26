@@ -3,7 +3,7 @@
 
 ### 如何安装
 ```php
-composer require czh9527/tp6-curd
+composer require czh9527/tp6-curd:v1.0
 ```
 
 ### 如何使用
