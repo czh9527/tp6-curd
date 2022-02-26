@@ -16,24 +16,33 @@ use think\Request;
 class <controller> extends BaseController
 {
     /**
+     * Notes:初始化
+     * Author: <user>
+     * @return bool
+     */
+    protected function initialize()
+    {
+        $this->model=new <model>Model();
+        return parent::initialize(); 
+    }
+    /**
     * Notes: 获取列表
 	* Author: <user>
     */
     public function index(Request $request)
     {
-        $<model>Model = new <model>Model();
 		$request_data=$request->param();
 		
         if(isset($request_data['in_search'])&&$request_data['in_search']!=''){
             $where = [
                 //['part_name','like',"%".$request_data['in_search']."%"],//TODO 需要更改
                 ];
-            $res = $<model>Model->get<model>List($where, $this->pageSize);
+            $res = $this->model->get<model>List($where, $this->pageSize);
         }
         else
         {
             $where = [];
-            $res = $<model>Model->get<model>List($where, $this->pageSize);
+            $res = $this->model->get<model>List($where, $this->pageSize);
         }
 		
         return $res;
@@ -45,7 +54,6 @@ class <controller> extends BaseController
     */
     public function add(Request $request)
     {
-		$<model>Model = new <model>Model();
         $request_data=$request->param();
 
         // 检验完整性
@@ -55,7 +63,7 @@ class <controller> extends BaseController
             return self::Error([],$e->getError(),400);
         }
 
-        $res = $<model>Model->add<model>($request_data);
+        $res = $this->model->add<model>($request_data);
         return $res;
 
     }
@@ -66,11 +74,10 @@ class <controller> extends BaseController
     */
     public function read(Request $request)
     {
-		$<model>Model = new <model>Model();
         $request_data=$request->param();
-        $<pk>=$request_data['<pk>'];
 		
-        $res = $<model>Model->get<model>By<pk>($<pk>);
+        $<pk>=$request_data['<pk>'];
+        $res = $this->model->get<model>By<pk>($<pk>);
         return $res;
     }
 
@@ -80,7 +87,6 @@ class <controller> extends BaseController
     */
     public function edit(Request $request)
     {
-        $<model>Model = new <model>Model();
         $request_data=$request->param();
 
         // 检验完整性
@@ -90,7 +96,7 @@ class <controller> extends BaseController
             return self::Error([],$e->getError(),400);
         }
 
-        $res = $<model>Model->edit<model>($request_data);
+        $res = $this->model->edit<model>($request_data);
         return $res;
     }
 
@@ -100,11 +106,11 @@ class <controller> extends BaseController
     */
     public function del(Request $request)
     {
-        $<model>Model = new <model>Model();
         $request_data=$request->param();
+		
         $<pk> = $request_data['<pk>'];
 
-        $res = $<model>Model->del<model>By<pk>($<pk>);
+        $res = $this->model->del<model>By<pk>($<pk>);
         return $res;
    }
 }

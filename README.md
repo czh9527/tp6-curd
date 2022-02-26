@@ -7,7 +7,7 @@ composer require czh9527/tp6-curd:v1.0
 ```
 
 ### 如何使用
-> php think curd  -p 模块名 -t table名
+> php think curd  -p 模块名 -t table名 -d 1 删除创建所有文件
 >
 > 自动生成model,controller,validate,
 > 支持hasOne和belongsTo的自动生成
