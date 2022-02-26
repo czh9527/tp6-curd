@@ -76,7 +76,7 @@ class ValidateAutoMake implements IAutoMake
             }
         }
 
-        file_put_contents($table.".txt",json_encode($json));//写外部json
+        file_put_contents($table.".json.log",json_encode($json));//写外部json
 
         $ruleArr = VarExporter::export($rule);
         $attributesArr = VarExporter::export($attributes);

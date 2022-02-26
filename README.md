@@ -12,7 +12,7 @@ composer require czh9527/tp6-curd
 > 自动生成model,controller,validate,
 > 支持hasOne和belongsTo的自动生成
 > 
-> 另外本地生成<表名.txt>用于配合<易文档>创建传参
+> 另外本地生成<表名.json.log>用于配合<易文档>创建传参
 
 
  
