@@ -7,6 +7,7 @@
  
 namespace app<namespace>model;
 
+//<tableIntroduce>
 use app<namespace>common\Output;
 use think\model;
 use Exception;

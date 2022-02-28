@@ -44,6 +44,10 @@ class ControllerAutoMake implements IAutoMake
 
         $prefix = config('database.connections.mysql.prefix');
         $column = Db::query('SHOW FULL COLUMNS FROM `' . $prefix . $table . '`');
+
+        $database = config('database.connections.mysql.database');
+        $tableIntroduce = Db::query('SELECT table_comment FROM information_schema.TABLES WHERE table_schema ='.'\'' . $database .'\''.' and table_name =' .'\''.$table. '\'');
+
         $pk = 'id';
         foreach ($column as $vo) {
             if ($vo['Key'] == 'PRI') {
@@ -66,6 +70,8 @@ class ControllerAutoMake implements IAutoMake
         $tplContent = str_replace('<controller>', $controller, $tplContent);
         $tplContent = str_replace('<model>', $model, $tplContent);
         $tplContent = str_replace('<pk>', $pk, $tplContent);
+
+        $tplContent = str_replace('<tableIntroduce>', $tableIntroduce[0]['table_comment'], $tplContent);
 
         $file =App::getAppPath() . $filePath . DS . 'controller' . DS . $controller . '.php';
         return file_put_contents($file, $tplContent);

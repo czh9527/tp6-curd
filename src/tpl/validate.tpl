@@ -9,6 +9,7 @@ namespace app<namespace>validate;
 
 use think\Validate;
 
+//<tableIntroduce>
 class <model> extends Validate
 { <addValidate>
     /**

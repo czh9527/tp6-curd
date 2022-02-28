@@ -38,6 +38,9 @@ class ValidateAutoMake implements IAutoMake
 
         $prefix = config('database.connections.mysql.prefix');
         $column = Db::query('SHOW FULL COLUMNS FROM `' . $prefix . $table . '`');
+        $database = config('database.connections.mysql.database');
+        $tableIntroduce = Db::query('SELECT table_comment FROM information_schema.TABLES WHERE table_schema ='.'\'' . $database .'\''.' and table_name =' .'\''.$table. '\'');
+
         $rule = [];
         $attributes = [];
         $pk = 'id';
@@ -86,7 +89,7 @@ class ValidateAutoMake implements IAutoMake
                 
                 if ($relations[0+$i*4] == $model)//创建的是主表
                 {
-                    $tplContent = str_replace('<addValidate>', '', $tplContent);
+
                 } else//创建附表
                 {
 
@@ -98,14 +101,19 @@ class ValidateAutoMake implements IAutoMake
                     
                     
                     $rule[$relations[3+$i*4].'|'.$Comment[$relations[3+$i*4]]]=$rule[$relations[3+$i*4].'|'.$Comment[$relations[3+$i*4]]].'|'.'check'.$relations[0+$i*4];
-                    file_put_contents("1.log",'2222'.$addvalidate);
+
                     $addvalidateData=$addvalidateData.$addvalidate;
                     
                 }
 
             }
-            file_put_contents("1.log",'3333');
+
             $tplContent = str_replace('<addValidate>', $addvalidateData, $tplContent);
+        }
+        else
+        {
+            $tplContent = str_replace('<addValidate>', '', $tplContent);
+
         }
 
         
@@ -131,6 +139,8 @@ class ValidateAutoMake implements IAutoMake
         $tplContent = str_replace('<attributes>', $attributesArr, $tplContent);
         $tplContent = str_replace('<adds>', $addsArr,$tplContent);
         $tplContent = str_replace('<edits>', $editsArr,$tplContent);
+        $tplContent = str_replace('<tableIntroduce>', $tableIntroduce[0]['table_comment'], $tplContent);
+
 
         $file =App::getAppPath() . $filePath . DS . 'validate' . DS . $model . '.php';
         return file_put_contents($file, $tplContent);
