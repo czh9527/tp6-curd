@@ -15,6 +15,16 @@ class <model> extends Model
 {
 	use Output;
 	protected $pk = '<pk>';
+    /**
+    * Notes: 新增数据前
+    * Author: <user>
+    */
+    public static function onBeforeInsert($data)// TODO 是否需要下面数据
+    {
+        $data['create_user']=request()->userinfo['aud'];
+        $data['compy_id']=request()->userinfo['compy_id'];
+        $data['create_time']=time();
+    }
     <frelationModel><relationModel>
     /**
     * Notes: 获取分页列表
@@ -49,7 +59,7 @@ class <model> extends Model
     public function add<model>($param)
     {
         try {
-            $res= $this->insert($param,true);
+            $res= $this->save($param);
         } catch(Exception $e) {
             return self::Error([],"新增失败~",400);
         }
