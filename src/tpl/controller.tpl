@@ -12,14 +12,26 @@ use app<namespace>model\<model> as <model>Model;
 use app<namespace>validate\<model> as <model>Validate;
 use think\exception\ValidateException;
 use think\Request;
+use hg\apidoc\annotation as Apidoc;
 
-//<tableIntroduce>
+/**
+ * <tableIntroduce>
+ * @Apidoc\Group("<model>")
+ *
+ */
 class <controller> extends BaseController
 {
     /**
-    * Notes: 获取列表
-	* Author: <user>
-    */
+     * @Apidoc\Author("<user>")
+     * @Apidoc\Title("获取列表")
+     * @Apidoc\Desc("获取最基础数据")
+     * @Apidoc\Method("GET")
+     * @Apidoc\Tag("开发中")
+     * @Apidoc\Param("in_search", type="string",require=true,default="", desc="模糊查询数据")
+     * @Apidoc\Param("page", type="string",require=true,default="1", desc="页码")
+     * @Apidoc\Param("page_size", type="int",default="1",desc="一页的大小" )
+     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+     */
     public function index(Request $request)
     {
         $<model>Model = new <model>Model();
@@ -41,9 +53,14 @@ class <controller> extends BaseController
     }
 
     /**
-    * Notes: 添加
-	* Author: <user>
-    */
+     * @Apidoc\Author("<user>")
+     * @Apidoc\Title("新增")
+     * @Apidoc\Desc("新增数据")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Tag("开发中")
+<addApidoc>
+     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+     */
     public function add(Request $request)
     {
 		$<model>Model = new <model>Model();
@@ -62,9 +79,14 @@ class <controller> extends BaseController
     }
 
     /**
-    * Notes: 根据<pk>查询信息
-	* Author: <user>
-    */
+     * @Apidoc\Author("<user>")
+     * @Apidoc\Title("查询单条数据")
+     * @Apidoc\Desc("根据<pk>获取数据")
+     * @Apidoc\Method("GET")
+     * @Apidoc\Tag("开发中")
+     * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
+     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+     */
     public function read(Request $request)
     {
 		$<model>Model = new <model>Model();
@@ -76,9 +98,14 @@ class <controller> extends BaseController
     }
 
     /**
-    * Notes: 编辑
-	* Author: <user>
-    */
+     * @Apidoc\Author("<user>")
+     * @Apidoc\Title("编辑")
+     * @Apidoc\Desc("编辑数据")
+     * @Apidoc\Method("PUT")
+     * @Apidoc\Tag("开发中")
+<editApidoc>
+     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+     */
     public function edit(Request $request)
     {
         $<model>Model = new <model>Model();
@@ -96,9 +123,14 @@ class <controller> extends BaseController
     }
 
     /**
-    * Notes: 删除
-	* Author: <user>
-    */
+     * @Apidoc\Author("<user>")
+     * @Apidoc\Title("删除")
+     * @Apidoc\Desc("根据<pk>删除数据")
+     * @Apidoc\Method("DELETE")
+     * @Apidoc\Tag("开发中")
+     * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
+     * @Apidoc\Returned("data", type="int", desc="是否删除成功")
+     */
     public function del(Request $request)
     {
         $<model>Model = new <model>Model();

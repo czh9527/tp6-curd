@@ -34,8 +34,7 @@ class ModelAutoMake implements IAutoMake
 
     public function make($table, $path, $relations)
     {
-
- 
+        
         $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/model.tpl';
 
         $tplContent = file_get_contents($controllerTpl);
@@ -59,6 +58,7 @@ class ModelAutoMake implements IAutoMake
             }
         }
         
+
         //确定注册的创建时间，创建人等
         $user=get_current_user();
         $date=date('Y-m-d');

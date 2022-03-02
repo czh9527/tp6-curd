@@ -53,32 +53,28 @@ class ValidateAutoMake implements IAutoMake
             }
         }
         foreach ($column as $vo) {
-            //编辑json
-            if(strpos($vo['Type'],'int')!== false)
-            {
-                $json[$vo['Field']]=1;
-            }
-            else if(!strpos($vo['Type'],'varchar')!== false)
-            {
-                $json[$vo['Field']]='test';
-            }
-            else if(!strpos($vo['Type'],'float')!== false)
-            {
-                $json[$vo['Field']]=1;
-            }
-            else
-            {
-                $json[$vo['Field']]='修改';
+            if($vo['Field']!='create_time' && $vo['Field']!='create_user' &&$vo['Field']!='compy_id' ) {
+                //编辑json
+                if (strpos($vo['Type'], 'int') !== false) {
+                    $json[$vo['Field']] = 1;
+                } else if (!strpos($vo['Type'], 'varchar') !== false) {
+                    $json[$vo['Field']] = 'test';
+                } else if (!strpos($vo['Type'], 'float') !== false) {
+                    $json[$vo['Field']] = 1;
+                } else {
+                    $json[$vo['Field']] = '修改';
+                }
+                $edits[]=$vo['Field'];
+                if($vo['Field'] != $pk)
+                {
+                    $adds[]=$vo['Field'];
+                }
             }
             /////
             $rule[$vo['Field'].'|'.$vo['Comment']] = 'require';
             $Comment[$vo['Field']] = $vo['Comment'];
 //            $attributes[$vo['Field']] = '需要'.$vo['Comment'].'~';
-            $edits[]=$vo['Field'];
-            if($vo['Field'] != $pk)
-            {
-                $adds[]=$vo['Field'];
-            }
+
         }
         /////czh
         file_put_contents("1.log",'111111');
