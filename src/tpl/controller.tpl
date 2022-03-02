@@ -27,8 +27,8 @@ class <controller> extends BaseController
      * @Apidoc\Desc("获取最基础数据")
      * @Apidoc\Method("GET")
      * @Apidoc\Tag("开发中")
-     * @Apidoc\Param("in_search", type="string",require=true,default="", desc="模糊查询数据")
-     * @Apidoc\Param("page", type="string",require=true,default="1", desc="页码")
+     * @Apidoc\Param("in_search", type="string",default="", desc="模糊查询数据")
+     * @Apidoc\Param("page", type="string",default="1", desc="页码")
      * @Apidoc\Param("page_size", type="int",default="1",desc="一页的大小" )
      * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
      */
