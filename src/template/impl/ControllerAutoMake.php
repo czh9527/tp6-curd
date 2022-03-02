@@ -110,11 +110,15 @@ class ControllerAutoMake implements IAutoMake
         $tplContent = str_replace('<addApidoc>', $apidocdata, $tplContent);
         //编辑需要主键
         $apidoc = file_get_contents(dirname(dirname(__DIR__)) . '/tpl/apidoc.tpl');
-        $apidoc = str_replace('<zdvalue>', $pkList[0], $apidoc);
-        $apidoc = str_replace('<zdtype>', $pkList[1], $apidoc);
-        $apidoc = str_replace('<zddefault>', $pkList[2], $apidoc);
-        $apidoc = str_replace('<zdms>', $pkList[3], $apidoc);
-        $apidocdata=$apidocdata.$apidoc;
+        //有主键的时候才执行
+        if(count($pkList)==4)
+        {
+            $apidoc = str_replace('<zdvalue>', $pkList[0], $apidoc);
+            $apidoc = str_replace('<zdtype>', $pkList[1], $apidoc);
+            $apidoc = str_replace('<zddefault>', $pkList[2], $apidoc);
+            $apidoc = str_replace('<zdms>', $pkList[3], $apidoc);
+            $apidocdata=$apidocdata.$apidoc;
+        }
         $tplContent = str_replace('<editApidoc>', $apidocdata, $tplContent);
 
         //确定注册的创建时间，创建人等
