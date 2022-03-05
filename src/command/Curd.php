@@ -10,6 +10,7 @@ namespace czh9527\tp6curd\command;
 use czh9527\tp6curd\extend\Utils;
 use czh9527\tp6curd\strategy\AutoMakeStrategy;
 use czh9527\tp6curd\template\impl\ControllerAutoMake;
+use czh9527\tp6curd\template\impl\ExcelAutoMake;
 use czh9527\tp6curd\template\impl\ModelAutoMake;
 use czh9527\tp6curd\template\impl\ValidateAutoMake;
 use think\console\Command;
@@ -51,6 +52,7 @@ class Curd extends Command
             exit;
         }
         $conrollerFile=App::getAppPath() . $path . DS . 'controller' . DS . $controller . '.php';
+        $excelConrollerFile=App::getAppPath() . $path . DS . 'controller' . DS . $controller .'Excel'. '.php';
         $modelFile=App::getAppPath() . $path . DS . 'model' . DS . $controller . '.php';
         $validateFile=App::getAppPath() .  $path . DS . 'validate' . DS . $controller . '.php';
         $jsonLogFile=App::getAppPath() .  $path . DS . 'controller' . DS . $table.'.易文档传参.log';
@@ -58,7 +60,7 @@ class Curd extends Command
         $delete = $input->getOption('delete');
         if ($delete) {
             $output->info("文件列表:");
-            $readyFiles = [$conrollerFile, $modelFile, $validateFile,$jsonLogFile];
+            $readyFiles = [$conrollerFile,$excelConrollerFile, $modelFile, $validateFile,$jsonLogFile];
             foreach ($readyFiles as $k => $v) {
                 $output->warning($v);
             }
@@ -129,6 +131,10 @@ class Curd extends Command
         $context->Context(new ControllerAutoMake());
         $context->executeStrategy($controller, $path, $table)?$output->info("\033[32m".$conrollerFile."创建成功"."\033[0m"):$output->info($conrollerFile."创建失败");
 
+        // 执行生成excelController策略
+        $context->Context(new ExcelAutoMake());
+        $context->executeStrategy($controller, $path, $table)?$output->info("\033[32m".$excelConrollerFile."创建成功"."\033[0m"):$output->info($excelConrollerFile."创建失败");
+        
 
         // 执行生成model策略
         $context->Context(new ModelAutoMake());
