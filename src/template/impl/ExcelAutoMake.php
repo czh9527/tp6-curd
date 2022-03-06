@@ -94,20 +94,22 @@ class ExcelAutoMake implements IAutoMake
         $btColomnCenterData="";
         $dygWidthData="";
         $addTableDataData="";
+        $paramData="";
         for($i=0;$i<count($zdvalue);$i++)
         {
             $zm = $this->IntToChr($i);
             //处理
+            $param='
+            $param[\''.$zdvalue[$i].'\']=$excel_array[$i]['.$i.'];';
+
             $btdata="
         ->setCellValue('".$zm."1', '".$zdms[$i]."')";
 
             $btCenter='
-        $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'1'.'\')->getAlignment()
-            ->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);';
-
+        $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'1'.'\')->applyFromArray($styleArray);';
+		
             $btColomnCenter='
-        $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'\')->getAlignment()
-            ->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);';
+        $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'\')->applyFromArray($styleArray);';
 
             $dygWidth='
         $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension(\''.$zm.'\')->setWidth(10);';
@@ -115,12 +117,14 @@ class ExcelAutoMake implements IAutoMake
             $addTableData='
         $objPHPExcel->getActiveSheet()->setCellValue(\''.$zm.'\' . ($i + 2), $con[$i][\''.$zdvalue[$i].'\']);';
 
+            $paramData=$paramData.$param;
             $btdataData=$btdataData.$btdata;
             $btCenterData=$btCenterData.$btCenter;
             $btColomnCenterData=$btColomnCenterData.$btColomnCenter;
             $dygWidthData=$dygWidthData.$dygWidth;
             $addTableDataData=$addTableDataData.$addTableData;
         }
+        $tplContent = str_replace('<param>', $paramData, $tplContent);
         $tplContent = str_replace('<btdata>', $btdataData, $tplContent);
         $tplContent = str_replace('<btCenter>', $btCenterData, $tplContent);
         $tplContent = str_replace('<btColomnCenter>', $btColomnCenterData, $tplContent);

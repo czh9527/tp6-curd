@@ -7,19 +7,19 @@
  
 namespace app<namespace>controller;
 
+use app\admin\exception\BaseController;
 use think\Request;
 use hg\apidoc\annotation as Apidoc;
+use Exception;
 
+/**
 /**
  * <tableIntroduce>导出excel
  * @Apidoc\Group("<model>")
  *
  */
-class <controller>
+class <controller> extends BaseController
 {
-    /**
-     * excel 读取导入
-     */
 	/**
      * @Apidoc\Author("<user>")
      * @Apidoc\Title("excel导入")
@@ -34,18 +34,50 @@ class <controller>
         $request_data=$request->param();
         //读取excel文件
         $file_name = $request_data['path'];
-        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
-        if($file_name =='xlsx' ){
-            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
-        }else{
-            $objReader = \PHPExcel_IOFactory::createReader('Excel5');
-        }
-
-        $obj_PHPExcel = $objReader->load($file_name, $encode = 'utf-8');  //加载文件内容,编码utf-8
+        $obj_PHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load($file_name);  //加载文件内容,编码utf-8
         $excel_array = $obj_PHPExcel->getsheet(0)->toArray();   //转换为数组格式
-
-        return $excel_array;
+        
+//        插入数据库
+        $<model>Model = new \app\admin\model\<model>();
+        $res=[];
+        for($i=1;$i<count($excel_array);$i++)
+        {
+            $param=[];<param>
+            try {
+                $res[]=$PartsLibModel->insert($param,true);
+            } catch(Exception $e) {
+                $res[]="第".$i."条数据导入失败~";
+            }
+        }
+        $flagArray=[];
+        foreach ($res as $key => $value)
+        {
+            $flag = 1;
+            if(strpos($value,"导入失败"))
+            {
+                $flag=0;
+            }
+            $flagArray[]=$flag;
+        }
+        $sum=0;
+        foreach ($flagArray as $key => $value)
+        {
+            $sum=$sum+$value;
+        }
+        if($sum==count($flagArray))
+        {
+            return self::Success($res,"全部导入成功~",200);
+        }
+        else if($sum==0)
+        {
+            return self::Error($res,"全部导入失败~",400);
+        }
+        else
+        {
+            return self::Error($res,"部分导入成功~",204);
+        }
     }
 
 	/**
@@ -67,23 +99,29 @@ class <controller>
             $where = [
 //                ['part_name','like',"%".$request_data['in_search']."%"],//TODO 根据需要修改
             ];
-            $res = $<model>Model->getPartsLibList($where, $request_data['page_size']);
+            $res = $<model>Model->getPartsLibList($where, $this->pageSize);
         }
         else
         {
             $where = [];
-            $res = $<model>Model->get<model>List($where, $request_data['page_size']);
+            $res = $<model>Model->get<model>List($where, $this->pageSize);
         }
 
         // 1.选取表中要输出数据
         $con = $res->getData()['data'];
 
         //3.实例化PHPExcel类
-        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         //4.激活当前的sheet表
         $objPHPExcel->setActiveSheetIndex(0);
         //5.设置表格头（即excel表格的第一行）
         $objPHPExcel->setActiveSheetIndex(0)<btdata>;
+		
+        $styleArray = [
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+            ],
+        ];		
 
         // 设置表格头水平居中<btCenter>
 
@@ -95,7 +133,7 @@ class <controller>
         for ($i = 0; $i < count($con); $i++) { <addTableData>
         }
         //7.设置保存的Excel表格名称
-        $filename = '<controller>' . date('ymd', time()) . '.xls';
+        $filename = '<model>-' . date('Y-m-d G:i:s', time()) . '.xls';
         //8.设置当前激活的sheet表格名称
         $objPHPExcel->getActiveSheet()->setTitle('<tableIntroduce>');
         //9.设置浏览器窗口下载表格
@@ -104,7 +142,7 @@ class <controller>
         header("Content-Type: application/download");
         header('Content-Disposition:inline;filename="' . $filename . '"');
         //生成excel文件
-        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+        $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xls');
         //下载文件在浏览器窗口
         $objWriter->save('php://output');
         exit;
