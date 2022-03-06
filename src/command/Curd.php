@@ -130,10 +130,6 @@ class Curd extends Command
         // 执行生成controller策略
         $context->Context(new ControllerAutoMake());
         $context->executeStrategy($controller, $path, $table)?$output->info("\033[32m".$conrollerFile."创建成功"."\033[0m"):$output->info($conrollerFile."创建失败");
-
-        // 执行生成excelController策略
-        $context->Context(new ExcelAutoMake());
-        $context->executeStrategy($controller, $path, $table)?$output->info("\033[32m".$excelConrollerFile."创建成功"."\033[0m"):$output->info($excelConrollerFile."创建失败");
         
 
         // 执行生成model策略

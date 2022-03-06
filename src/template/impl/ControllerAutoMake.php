@@ -136,6 +136,61 @@ class ControllerAutoMake implements IAutoMake
         $tplContent = str_replace('<pk>', $pk, $tplContent);
 
         $tplContent = str_replace('<tableIntroduce>', $tableIntroduce[0]['table_comment'], $tplContent);
+        
+        //处理excel
+        //字母对应循环写入文件
+        $zdvalue=[];
+        $zdtype=[];
+        $zdms=[];
+        foreach ($column as $vo) {
+            $zdvalue[]=$vo['Field'];
+            $zdtype[]=$vo['Type'];
+
+            $zdms[]=$vo['Comment'];
+
+        }
+        $btdataData="";
+        $btCenterData="";
+        $btColomnCenterData="";
+        $dygWidthData="";
+        $addTableDataData="";
+        $paramData="";
+        for($i=0;$i<count($zdvalue);$i++)
+        {
+            $zm = $this->IntToChr($i);
+            //处理
+            $param='
+            $param[\''.$zdvalue[$i].'\']=$excel_array[$i]['.$i.'];';
+
+            $btdata="
+        ->setCellValue('".$zm."1', '".$zdms[$i]."')";
+
+            $btCenter='
+        $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'1'.'\')->applyFromArray($styleArray);';
+
+            $btColomnCenter='
+        $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'\')->applyFromArray($styleArray);';
+
+            $dygWidth='
+        $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension(\''.$zm.'\')->setWidth(10);';
+
+            $addTableData='
+        $objPHPExcel->getActiveSheet()->setCellValue(\''.$zm.'\' . ($i + 2), $con[$i][\''.$zdvalue[$i].'\']);';
+
+            $paramData=$paramData.$param;
+            $btdataData=$btdataData.$btdata;
+            $btCenterData=$btCenterData.$btCenter;
+            $btColomnCenterData=$btColomnCenterData.$btColomnCenter;
+            $dygWidthData=$dygWidthData.$dygWidth;
+            $addTableDataData=$addTableDataData.$addTableData;
+        }
+        $tplContent = str_replace('<param>', $paramData, $tplContent);
+        $tplContent = str_replace('<btdata>', $btdataData, $tplContent);
+        $tplContent = str_replace('<btCenter>', $btCenterData, $tplContent);
+        $tplContent = str_replace('<btColomnCenter>', $btColomnCenterData, $tplContent);
+        $tplContent = str_replace('<dygWidth>', $dygWidthData, $tplContent);
+        $tplContent = str_replace('<addTableData>', $addTableDataData, $tplContent);
+
 
         $file =App::getAppPath() . $filePath . DS . 'controller' . DS . $controller . '.php';
         return file_put_contents($file, $tplContent);
@@ -150,5 +205,13 @@ class ControllerAutoMake implements IAutoMake
 //
 //            file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php', $tplContent);
 //        }
+    }
+
+    public function IntToChr($index, $start = 65) {
+        $str = '';
+        if (floor($index / 26) > 0) {
+            $str .= IntToChr(floor($index / 26)-1);
+        }
+        return $str . chr($index % 26 + $start);
     }
 }
