@@ -29,24 +29,34 @@ class <controller> extends BaseController
      * @Apidoc\Tag("开发中")
      * @Apidoc\Param("in_search", type="string",default="", desc="模糊查询数据")
      * @Apidoc\Param("page", type="string",default="1", desc="页码")
-     * @Apidoc\Param("page_size", type="int",default="1",desc="一页的大小" )
+     * @Apidoc\Param("page_size", type="int",default="1",desc="一页的大小")
+     * @Apidoc\Param("is_all", type="int",default="0",desc="是否输出全部数据，默认使用分页输出")
      * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
      */
     public function index(Request $request)
     {
         $<model>Model = new <model>Model();
 		$request_data=$request->param();
-		
+
+        if(isset($request_data['is_all']))
+        {
+            $is_all=$request_data['is_all'];
+        }
+        else
+        {
+            $is_all='';
+        }
+
         if(isset($request_data['in_search'])&&$request_data['in_search']!=''){
             $where = [
                 //['part_name','like',"%".$request_data['in_search']."%"],//TODO 需要更改
                 ];
-            $res = $<model>Model->get<model>List($where, $this->pageSize);
+            $res = $<model>Model->get<model>List($where, $this->pageSize,$is_all);
         }
         else
         {
             $where = [];
-            $res = $<model>Model->get<model>List($where, $this->pageSize);
+            $res = $<model>Model->get<model>List($where, $this->pageSize,$is_all);
         }
 		
         return $res;

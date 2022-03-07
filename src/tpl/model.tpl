@@ -33,10 +33,17 @@ class <model> extends Model
     * @param $page_size
     * @return \think\Response
     */
-    public function get<model>List($where, $page_size)
+    public function get<model>List($where, $page_size,$is_all)
     {
         try {
-            $res = $this->where($where)->order('<pk>', 'asc')->paginate($page_size);
+                if($is_all)//是否全部输出
+                {
+                    $res = $this->where($where)->order('<pk>', 'asc')->select();
+                }
+                else
+                {
+                    $res = $this->where($where)->order('<pk>', 'asc')->paginate($page_size);
+                }
         } catch(Exception $e) {
             return self::Error([],"请求数据失败~",400);
         }
