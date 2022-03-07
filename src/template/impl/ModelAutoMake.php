@@ -57,7 +57,25 @@ class ModelAutoMake implements IAutoMake
                 break;
             }
         }
-        
+
+        $have_pid=false;
+        foreach ($column as $vo) {
+            if ($vo['Field'] == 'pid') {
+                $have_pid=true;
+                break;
+            }
+        }
+        //有pid时，删除需要加删除所有孩子
+        $delete_pid='
+            $this->where(\'pid\', $id)->select()->delete();';
+        if($have_pid)
+        {
+            $tplContent = str_replace('<delete_pid>', $delete_pid, $tplContent);
+        }
+        else{
+            $tplContent = str_replace('<delete_pid>', '', $tplContent);
+        }
+
 
         //确定注册的创建时间，创建人等
         $user=get_current_user();

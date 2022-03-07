@@ -107,14 +107,15 @@ class <model> extends Model
     public function edit<model>($param)
     {
         try {
-		    if($this->where('<pk>', $param['<pk>'])->find())
+            $data=$this->where('<pk>', $param['<pk>'])->find();
+            if($data)
             {
-				$res=$this->where('<pk>', $param['<pk>'])->update($param);
-			}
-			else
-			{
-				return self::Error([],"不存在该数据~",204);
-			}
+                $res=$this->where('<pk>', $param['<pk>'])->update($param);
+            }
+            else
+            {
+                return self::Error([],"不存在该数据~",204);
+            }
         } catch(Exception $e) {
             return self::Error([],"编辑失败~",400);
         }
@@ -138,7 +139,7 @@ class <model> extends Model
     {
         try { <relationDelModel>
             // TODO 不可删除校验
-            $res=$this->where('<pk>', $<pk>)->delete();
+            $res=$this->where('<pk>', $<pk>)->delete();<delete_pid>
         } catch(Exception $e) {
             return self::Error([],"删除失败~",400);
         }
