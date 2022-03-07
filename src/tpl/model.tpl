@@ -110,7 +110,7 @@ class <model> extends Model
             $data=$this->where('<pk>', $param['<pk>'])->find();
             if($data)
             {
-                $res=$this->where('<pk>', $param['<pk>'])->update($param);
+                $res=$data->update($param);
             }
             else
             {
