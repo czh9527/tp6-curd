@@ -223,21 +223,7 @@ class <controller> extends BaseController
      */
     public function output(Request $request)
     {
-        $<model>Model = new \app\admin\model\<model>();
-        $request_data=$request->param();
-
-        if(isset($request_data['in_search'])&&$request_data['in_search']!=''){
-            $where = [
-//                ['part_name','like',"%".$request_data['in_search']."%"],//TODO 根据需要修改
-            ];
-            $res = $<model>Model->getPartsLibList($where, $this->pageSize);
-        }
-        else
-        {
-            $where = [];
-            $res = $<model>Model->get<model>List($where, $this->pageSize);
-        }
-
+        $res=$this->index($request);
         // 1.选取表中要输出数据
         $con = $res->getData()['data'];
 
