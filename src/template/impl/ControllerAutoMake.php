@@ -271,11 +271,23 @@ class ControllerAutoMake implements IAutoMake
 //        }
     }
 
-    public function IntToChr($index, $start = 65) {
-        $str = '';
-        if (floor($index / 26) > 0) {
-            $str .= IntToChr(floor($index / 26)-1);
+    public static function IntToChr($pColumnIndex = 0)
+    {
+        static $_indexCache = array();
+
+        if (!isset($_indexCache[$pColumnIndex])) {
+            // Determine column string
+            if ($pColumnIndex < 26) {
+                $_indexCache[$pColumnIndex] = chr(65 + $pColumnIndex);
+            } elseif ($pColumnIndex < 702) {
+                $_indexCache[$pColumnIndex] = chr(64 + ($pColumnIndex / 26)) .
+                    chr(65 + $pColumnIndex % 26);
+            } else {
+                $_indexCache[$pColumnIndex] = chr(64 + (($pColumnIndex - 26) / 676)) .
+                    chr(65 + ((($pColumnIndex - 26) % 676) / 26)) .
+                    chr(65 + $pColumnIndex % 26);
+            }
         }
-        return $str . chr($index % 26 + $start);
+        return $_indexCache[$pColumnIndex];
     }
 }
