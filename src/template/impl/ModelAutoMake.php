@@ -58,6 +58,7 @@ class ModelAutoMake implements IAutoMake
             }
         }
 
+        ///处理有pid树的情况
         $have_pid=false;
         foreach ($column as $vo) {
             if ($vo['Field'] == 'pid') {
@@ -65,15 +66,34 @@ class ModelAutoMake implements IAutoMake
                 break;
             }
         }
-        //有pid时，删除需要加删除所有孩子
-        $delete_pid='
-            $this->where(\'pid\', $id)->select()->delete();';
+        $getAllListByPid='   
+    public $idList=[]; 
+    /**
+     * Notes: 递归查询所有孩子（包括孩子的孩子）
+     * Author: <user>
+     */
+    public function getAllListByPid($pid)
+    {
+        try {
+            $res = $this->where([\'pid\' => $pid])->field(\'id\')->select();
+        } catch (Exception $e) {
+            return self::Error([], "请求数据失败~", 400);
+        }
+        if (count($res)) {
+            foreach ($res as $key => $value) {
+                $this->idList[]=$value[\'id\'];
+                $this->getAllListByPid($value[\'id\']);
+            }
+        }
+
+    }';
+
         if($have_pid)
         {
-            $tplContent = str_replace('<delete_pid>', $delete_pid, $tplContent);
+            $tplContent = str_replace('<getAllListByPid>', $getAllListByPid, $tplContent);
         }
         else{
-            $tplContent = str_replace('<delete_pid>', '', $tplContent);
+            $tplContent = str_replace('<getAllListByPid>', '', $tplContent);
         }
 
 
@@ -91,11 +111,7 @@ class ModelAutoMake implements IAutoMake
         $tplContent = str_replace('<pk>', $pk, $tplContent);
 
 
-        //匹配关联表信息
-
-        
-        
-        
+        //匹配关联表操作
         $relationModelData='';
         $frelationModelData='';
         $relationDelModelData='';

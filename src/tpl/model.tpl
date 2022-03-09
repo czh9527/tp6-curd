@@ -25,7 +25,7 @@ class <model> extends Model
         $data['compy_id']=request()->userinfo['compy_id'];
         $data['create_time']=time();
     }
-    <frelationModel><relationModel>
+    <frelationModel><relationModel><getAllListByPid>
     /**
     * Notes: 获取分页列表
 	* Author: <user>
@@ -74,7 +74,7 @@ class <model> extends Model
     }
 
     /**
-    * Notes: 根据<pk>获取信息
+    * Notes: 根据<pk>获取信息-也可传数组
 	* Author: <user>
     * @param $<pk>
     * @return \think\Response
@@ -82,7 +82,7 @@ class <model> extends Model
     public function get<model>By<pk>($<pk>)
     {
         try {
-            $res = $this->where('<pk>', $<pk>)->find();
+            $res = $this->select($id);
         } catch(Exception $e) {
 
             return self::Error([],"查询数据失败~",400);
@@ -130,7 +130,7 @@ class <model> extends Model
     }
 
     /**
-    * Notes: 删除信息
+    * Notes: 删除信息-也可传数组
 	* Author: <user>
     * @param $<pk>
     * @return \think\Response
@@ -139,7 +139,7 @@ class <model> extends Model
     {
         try { <relationDelModel>
             // TODO 不可删除校验
-            $res=$this->where('<pk>', $<pk>)->delete();<delete_pid>
+            $res=$this->destroy($<pk>);
         } catch(Exception $e) {
             return self::Error([],"删除失败~",400);
         }

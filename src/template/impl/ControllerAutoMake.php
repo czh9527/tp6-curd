@@ -60,6 +60,68 @@ class ControllerAutoMake implements IAutoMake
                 break;
             }
         }
+        ///处理有pid树的情况
+        $have_pid=false;
+        foreach ($column as $vo) {
+            if ($vo['Field'] == 'pid') {
+                $have_pid=true;
+                break;
+            }
+        }
+
+        $delete="    
+    public function del(Request \$request)
+    {
+        $<model>Model = new <model>Model();
+        \$request_data=\$request->param();
+        $<pk> = \$request_data['<pk>'];
+
+        \$res = $<model>Model->del<model>By<pk>($<pk>);
+        return \$res;
+   }";
+        $deleteHavePid="    
+    public function del(Request \$request)
+    {
+        \$<model>Model = new <model>Model();
+        \$request_data=\$request->param();
+
+        \$<model>Model->idList=[];//初始化id列表
+        \$<model>Model->idList[]=\$request_data['<pk>'];//放入自己
+
+        \$<model>Model->getAllListByPid(\$request_data['<pk>']);//获取所有孩子
+        return \$<model>Model->del<model>Byid(\$<model>Model->idList);
+
+   }";
+        $getChils='    
+   /**
+     * @Apidoc\Author("<user>")
+     * @Apidoc\Title("获取自己+所有子")
+     * @Apidoc\Desc("根据id递归获取所有子（包括孩子的孩子）")
+     * @Apidoc\Method("GET")
+     * @Apidoc\Tag("开发中")
+     * @Apidoc\Param("id", type="int",require=true,default="1", desc="当前节点id")
+     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+     */
+    public function getchilds(Request $request)
+    {
+        $<model>Model = new <model>Model();
+        $request_data=$request->param();
+        $<model>Model->idList=[];
+        $<model>Model->idList[]=$request_data[\'id\'];//加入自己
+        //递归所有子，再输出
+        $<model>Model->getAllListByPid($request_data[\'id\']);
+        return $<model>Model->get<model>Byid($<model>Model->idList);
+    }';
+
+        if($have_pid)
+        {
+            $tplContent = str_replace('<delete>', $deleteHavePid, $tplContent);
+            $tplContent = str_replace('<getChilds>', $getChils, $tplContent);
+        }
+        else{
+            $tplContent = str_replace('<delete>', $delete, $tplContent);
+            $tplContent = str_replace('<getChilds>', '', $tplContent);
+        }
         //apidoc
 //        * @Apidoc\Param("<zdvalue>", type="<zdtype>",require=true,default="<zddefault>", desc="<zdms>")
 
@@ -190,6 +252,8 @@ class ControllerAutoMake implements IAutoMake
         $tplContent = str_replace('<btColomnCenter>', $btColomnCenterData, $tplContent);
         $tplContent = str_replace('<dygWidth>', $dygWidthData, $tplContent);
         $tplContent = str_replace('<addTableData>', $addTableDataData, $tplContent);
+        
+
 
 
         $file =App::getAppPath() . $filePath . DS . 'controller' . DS . $controller . '.php';

@@ -20,7 +20,7 @@ use hg\apidoc\annotation as Apidoc;
  *
  */
 class <controller> extends BaseController
-{
+{ <getChilds>
     /**
      * @Apidoc\Author("<user>")
      * @Apidoc\Title("获取列表")
@@ -140,17 +140,8 @@ class <controller> extends BaseController
      * @Apidoc\Tag("开发中")
      * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
      * @Apidoc\Returned("data", type="int", desc="是否删除成功")
-     */
-    public function del(Request $request)
-    {
-        $<model>Model = new <model>Model();
-        $request_data=$request->param();
-        $<pk> = $request_data['<pk>'];
+     */<delete>
 
-        $res = $<model>Model->del<model>By<pk>($<pk>);
-        return $res;
-   }
-   
    	/**
      * @Apidoc\Author("<user>")
      * @Apidoc\Title("excel导入")
