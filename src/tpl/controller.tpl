@@ -68,8 +68,7 @@ class <controller> extends BaseController
      * @Apidoc\Desc("新增数据")
      * @Apidoc\Method("POST")
      * @Apidoc\Tag("开发中")
-<addApidoc>
-     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+<addApidoc>     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
      */
     public function add(Request $request)
     {
@@ -113,8 +112,7 @@ class <controller> extends BaseController
      * @Apidoc\Desc("编辑数据")
      * @Apidoc\Method("PUT")
      * @Apidoc\Tag("开发中")
-<editApidoc>
-     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+<editApidoc>     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
      */
     public function edit(Request $request)
     {
