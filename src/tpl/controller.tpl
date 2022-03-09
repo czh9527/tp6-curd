@@ -16,7 +16,7 @@ use hg\apidoc\annotation as Apidoc;
 
 /**
  * <tableIntroduce>
- * @Apidoc\Group("<model>")
+ * @Apidoc\Group("Base")
  *
  */
 class <controller> extends BaseController
