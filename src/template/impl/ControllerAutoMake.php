@@ -28,7 +28,7 @@ class ControllerAutoMake implements IAutoMake
         if (file_exists($controllerFilePath)) {
             $output = new Output();
             $output->error("\033[31m"."$controllerFilePath 已经存在"."\033[0m");
-            exit;
+//            exit;
         }
     }
 
@@ -259,17 +259,76 @@ class ControllerAutoMake implements IAutoMake
         $file =App::getAppPath() . $filePath . DS . 'controller' . DS . $controller . '.php';
         return file_put_contents($file, $tplContent);
 
-        // 检测base是否存在--现在不创建babse
-//        if (!file_exists(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php')) {
-//
-//            $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/baseController.tpl';
-//            $tplContent = file_get_contents($controllerTpl);
-//
-//            $tplContent = str_replace('<namespace>', $namespace, $tplContent);
-//
-//            file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php', $tplContent);
-//        }
+//         检测base是否存在--现在不创建babse
+        if (!file_exists(App::getAppPath() . $filePath . DS . 'common' . DS . 'BaseController.php')) {
+
+            $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/baseController.tpl';
+            $tplContent = file_get_contents($controllerTpl);
+
+            //确定注册的创建时间，创建人等
+            $user=get_current_user();
+            $date=date('Y-m-d');
+            $time=date('G:i');
+            $tplContent = str_replace('<user>', $user, $tplContent);
+            $tplContent = str_replace('<date>', $date, $tplContent);
+            $tplContent = str_replace('<time>', $time, $tplContent);
+            $tplContent = str_replace('<namespace>', $namespace, $tplContent);
+
+            file_put_contents(App::getAppPath() . $filePath . DS . 'common' . DS . 'BaseController.php', $tplContent);
+        }
+        //         检测trait-output是否存在--现在不创建trait-output
+        if (!file_exists(App::getAppPath() . $filePath . DS . 'common' . DS . 'Output.php')) {
+
+            $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/output.tpl';
+            $tplContent = file_get_contents($controllerTpl);
+
+            //确定注册的创建时间，创建人等
+            $user=get_current_user();
+            $date=date('Y-m-d');
+            $time=date('G:i');
+            $tplContent = str_replace('<user>', $user, $tplContent);
+            $tplContent = str_replace('<date>', $date, $tplContent);
+            $tplContent = str_replace('<time>', $time, $tplContent);
+            $tplContent = str_replace('<namespace>', $namespace, $tplContent);
+
+            file_put_contents(App::getAppPath() . $filePath . DS . 'common' . DS . 'Output.php', $tplContent);
+        }
+        //         检测checktoken是否存在--现在不创建checktoken
+        if (!file_exists(App::getAppPath() . $filePath . DS . 'middleware' . DS . 'CheckToken.php')) {
+
+            $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/checktoken.tpl';
+            $tplContent = file_get_contents($controllerTpl);
+
+            //确定注册的创建时间，创建人等
+            $user=get_current_user();
+            $date=date('Y-m-d');
+            $time=date('G:i');
+            $tplContent = str_replace('<user>', $user, $tplContent);
+            $tplContent = str_replace('<date>', $date, $tplContent);
+            $tplContent = str_replace('<time>', $time, $tplContent);
+            $tplContent = str_replace('<namespace>', $namespace, $tplContent);
+
+            file_put_contents(App::getAppPath() . $filePath . DS . 'middleware' . DS . 'CheckToken.php', $tplContent);
+        }
+        //         检测login是否存在--现在不创建login
+        if (!file_exists(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Login.php')) {
+
+            $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/login.tpl';
+            $tplContent = file_get_contents($controllerTpl);
+
+            //确定注册的创建时间，创建人等
+            $user=get_current_user();
+            $date=date('Y-m-d');
+            $time=date('G:i');
+            $tplContent = str_replace('<user>', $user, $tplContent);
+            $tplContent = str_replace('<date>', $date, $tplContent);
+            $tplContent = str_replace('<time>', $time, $tplContent);
+            $tplContent = str_replace('<namespace>', $namespace, $tplContent);
+
+            file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Login.php', $tplContent);
+        }
     }
+
 
     public static function IntToChr($pColumnIndex = 0)
     {
