@@ -7,7 +7,7 @@
  
 namespace app<namespace>controller;
 
-use app<namespace>exception\BaseController;
+use app<namespace>common\BaseController;
 use app<namespace>model\<model> as <model>Model;
 use app<namespace>validate\<model> as <model>Validate;
 use think\exception\ValidateException;
@@ -92,7 +92,7 @@ class <controller> extends BaseController
      * @Apidoc\Title("详细-查询单条数据")
      * @Apidoc\Desc("根据<pk>获取数据")
      * @Apidoc\Method("GET")
-     * @Apidoc\Tag("开发中"
+     * @Apidoc\Tag("开发中")
      * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
      * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
      */

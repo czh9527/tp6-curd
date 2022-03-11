@@ -28,7 +28,7 @@ class ModelAutoMake implements IAutoMake
         if (file_exists($modelFilePath)) {
             $output = new Output();
             $output->error("\033[31m"."$modelFilePath 已经存在"."\033[0m");
-            exit;
+//            exit;
         }
     }
 

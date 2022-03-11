@@ -23,7 +23,7 @@ class ValidateAutoMake implements IAutoMake
         if (file_exists($validateFilePath)) {
             $output = new Output();
             $output->error("\033[31m"."$validateFilePath 已经存在"."\033[0m");
-            exit;
+//            exit;
         }
     }
 
@@ -113,8 +113,7 @@ class ValidateAutoMake implements IAutoMake
         }
 
         
-        file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS .
-            $table.".易文档传参.log",json_encode($json));//写外部json
+
 
         $ruleArr = VarExporter::export($rule);
         $attributesArr = VarExporter::export($attributes);

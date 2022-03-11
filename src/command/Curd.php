@@ -28,39 +28,67 @@ class Curd extends Command
             ->addOption('table', 't', Option::VALUE_OPTIONAL, '表名', null)
             ->addOption('path', 'p', Option::VALUE_OPTIONAL, '路径', null)
             ->addOption('delete', 'd', Option::VALUE_OPTIONAL, '删除curd文件', 0)
+            ->addOption('all', 'a', Option::VALUE_OPTIONAL, '安装表格全部curd', 0)
             ->setDescription('auto make curd file');
     }
 
     protected function execute(Input $input, Output $output)
     {
-
-        !defined('DS') && define('DS', DIRECTORY_SEPARATOR);
-        //获取表名
-        $table = $input->getOption('table');
-        if (!$table) {
-            $output->error("请输入 -t 表名");
-            exit;
+        $is_all=$input->getOption('all');
+        if($is_all==1)
+        {
+            //获取路径
+            $path = $input->getOption('path');
+            if (!$path) {
+                $output->error("请输入 -p 路径名");
+                exit;
+            }
+            
+            $database=config('database.connections.mysql.database');
+//            $column=Db::query('select TABLE_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE t where t.TABLE_SCHEMA ='.'\''.$database.'\'');//查找所有表
+            $column=Db::query('show tables from '.$database);
+            foreach ($column as $vo) {
+                if($vo['Tables_in_'.$database]!='')//查询值不为空才输出
+                {
+                    $this->makeFile($input,$output,$vo['Tables_in_'.$database],$path);
+                }
+            }
+        }
+        else
+        {
+            //获取表名
+            $table = $input->getOption('table');
+            if (!$table) {
+                $output->error("请输入 -t 表名");
+                exit;
+            }
+            //获取路径
+            $path = $input->getOption('path');
+            if (!$path) {
+                $output->error("请输入 -p 路径名");
+                exit;
+            }
+            $this->makeFile($input,$output,$table,$path);
         }
 
+        
+    }
+    public function makeFile(Input $input, Output $output,$table,$path)
+    {
+        !defined('DS') && define('DS', DIRECTORY_SEPARATOR);
         //通过表名得到控制器名
         $controller = ucfirst(Utils::camelize($table));
-
-        //获取路径
-        $path = $input->getOption('path');
-        if (!$path) {
-            $output->error("请输入 -p 路径名");
-            exit;
-        }
+        
         $conrollerFile=App::getAppPath() . $path . DS . 'controller' . DS . $controller . '.php';
         $excelConrollerFile=App::getAppPath() . $path . DS . 'controller' . DS . $controller .'Excel'. '.php';
         $modelFile=App::getAppPath() . $path . DS . 'model' . DS . $controller . '.php';
         $validateFile=App::getAppPath() .  $path . DS . 'validate' . DS . $controller . '.php';
-        $jsonLogFile=App::getAppPath() .  $path . DS . 'controller' . DS . $table.'.易文档传参.log';
+        
         //删除文件
         $delete = $input->getOption('delete');
         if ($delete) {
             $output->info("文件列表:");
-            $readyFiles = [$conrollerFile,$excelConrollerFile, $modelFile, $validateFile,$jsonLogFile];
+            $readyFiles = [$conrollerFile,$excelConrollerFile, $modelFile, $validateFile];
             foreach ($readyFiles as $k => $v) {
                 $output->warning($v);
             }
@@ -124,24 +152,21 @@ class Curd extends Command
                 $relations[] = $vo['COLUMN_NAME'];
             }
         }
-//        exit;
+
         $context = new AutoMakeStrategy();
 
         // 执行生成controller策略
         $context->Context(new ControllerAutoMake());
         $context->executeStrategy($controller, $path, $table)?$output->info("\033[32m".$conrollerFile."创建成功"."\033[0m"):$output->info($conrollerFile."创建失败");
-        
+
 
         // 执行生成model策略
         $context->Context(new ModelAutoMake());
-        $context->executeStrategy($table, $path, $relations)?$output->info("\033[32m".$modelFile."创建成功"."\033[0m"):$output->info($conrollerFile."创建失败");
+        $context->executeStrategy($table, $path, $relations)?$output->info("\033[32m".$modelFile."创建成功"."\033[0m"):$output->info($modelFile."创建失败");
 
 
         // 执行生成validate策略
         $context->Context(new ValidateAutoMake());
-        $context->executeStrategy($table, $path, $relations)?$output->info("\033[32m".$validateFile."创建成功"."\n".$jsonLogFile."创建成功"."\033[0m")
-            :$output->info($conrollerFile."创建失败");
-
-
+        $context->executeStrategy($table, $path, $relations)?$output->info("\033[32m".$validateFile."创建成功"."\033[0m"):$output->info($conrollerFile."创建失败");
     }
 }
