@@ -130,7 +130,7 @@ class ControllerAutoMake implements IAutoMake
         $zddefault=[];
         $zdms=[];
         foreach ($column as $vo) {
-            if($vo['Key']!='PRI' && $vo['Field']!='create_time' && $vo['Field']!='create_user' &&$vo['Field']!='compy_id' )
+            if($vo['Key']!='PRI' && $vo['Field']!='create_time' && $vo['Field']!='create_user' )
             {
                 $zdvalue[]=$vo['Field'];
                 $zdtype[]=$vo['Type'];
