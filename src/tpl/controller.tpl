@@ -21,7 +21,18 @@ use hg\apidoc\annotation as Apidoc;
  *
  */
 class <controller> extends BaseController
-{ <getChilds>
+{
+    /**
+     * <model>模型对象
+     * @var \app\admin\model\<model>
+     */
+    protected $model = null;
+    public function initialize()
+    {
+        parent::initialize();
+        $this->model = new \app\admin\model\<model>;
+    }<getChilds>
+
     /**
      * @Apidoc\Author("<user>")
      * @Apidoc\Title("获取列表")
@@ -38,7 +49,6 @@ class <controller> extends BaseController
     {
         if($request->isGet())
         {
-            $<model>Model = new <model>Model();
             $request_data=$request->param();
 
             if(isset($request_data['is_all']))
@@ -54,12 +64,12 @@ class <controller> extends BaseController
                 $where = [
                     //['part_name','like',"%".$request_data['in_search']."%"],//TODO 需要更改
                     ];
-                $res = $<model>Model->get<model>List($where, $this->pageSize,$is_all);
+                $res = $this->model->get<model>List($where, $this->pageSize,$is_all);
             }
             else
             {
                 $where = [];
-                $res = $<model>Model->get<model>List($where, $this->pageSize,$is_all);
+                $res = $this->model->get<model>List($where, $this->pageSize,$is_all);
             }
 
             return $res;
@@ -78,7 +88,6 @@ class <controller> extends BaseController
     {
         if($request->isPost())
         {
-            $<model>Model = new <model>Model();
             $request_data=$request->param();
 
             // 检验完整性
@@ -88,7 +97,7 @@ class <controller> extends BaseController
                 return self::Error([],$e->getError(),400);
             }
 
-            $res = $<model>Model->add<model>($request_data);
+            $res = $this->model->add<model>($request_data);
             return $res;
         }
 
@@ -107,11 +116,10 @@ class <controller> extends BaseController
     {
         if($request->isGet())
         {
-            $<model>Model = new <model>Model();
             $request_data=$request->param();
             $<pk>=$request_data['<pk>'];
 
-            $res = $<model>Model->get<model>By<pk>($<pk>);
+            $res = $this->model->get<model>By<pk>($<pk>);
             return $res;
         }
     }
@@ -128,7 +136,6 @@ class <controller> extends BaseController
     {
         if($request->isPut())
         {
-            $<model>Model = new <model>Model();
             $request_data=$request->param();
 
             // 检验完整性
@@ -138,7 +145,7 @@ class <controller> extends BaseController
                 return self::Error([],$e->getError(),400);
             }
 
-            $res = $<model>Model->edit<model>($request_data);
+            $res = $this->model->edit<model>($request_data);
             return $res;
         }
     }
@@ -175,7 +182,6 @@ class <controller> extends BaseController
             $excel_array = $obj_PHPExcel->getsheet(0)->toArray();   //转换为数组格式
 
     //        插入数据库
-            $<model>Model = new \app\admin\model\<model>();
             $res=[];
 
             for($i=1;$i<count($excel_array);$i++)
@@ -183,7 +189,7 @@ class <controller> extends BaseController
                 $param=[];<param>
                 Db::startTrans();
                 try {
-                    $res[]=$<model>Model->insert($param,true);
+                    $res[]=$this->model->insert($param,true);
                     Db::commit();
                 } catch(\Exception $e) {
                     Db::rollback();

@@ -157,16 +157,15 @@ class Curd extends Command
 
         // 执行生成controller策略
         $context->Context(new ControllerAutoMake());
-        $context->executeStrategy($controller, $path, $table)?$output->info("\033[32m".$conrollerFile."创建成功"."\033[0m"):$output->info($conrollerFile."创建失败");
-
+        $context->executeStrategy($controller, $path, $table);
 
         // 执行生成model策略
         $context->Context(new ModelAutoMake());
-        $context->executeStrategy($table, $path, $relations)?$output->info("\033[32m".$modelFile."创建成功"."\033[0m"):$output->info($modelFile."创建失败");
+        $context->executeStrategy($table, $path, $relations);
 
 
         // 执行生成validate策略
         $context->Context(new ValidateAutoMake());
-        $context->executeStrategy($table, $path, $relations)?$output->info("\033[32m".$validateFile."创建成功"."\033[0m"):$output->info($conrollerFile."创建失败");
+        $context->executeStrategy($table, $path, $relations);
     }
 }

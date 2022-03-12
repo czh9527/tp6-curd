@@ -23,8 +23,9 @@ class ValidateAutoMake implements IAutoMake
         if (file_exists($validateFilePath)) {
             $output = new Output();
             $output->error("\033[31m"."$validateFilePath 已经存在"."\033[0m");
-//            exit;
+            return true;
         }
+        return false;
     }
 
     public function make($table, $path, $relations)
@@ -138,6 +139,14 @@ class ValidateAutoMake implements IAutoMake
 
 
         $file =App::getAppPath() . $filePath . DS . 'validate' . DS . $model . '.php';
-        return file_put_contents($file, $tplContent);
+        return $this->makeFile($file, $tplContent);
+    }
+
+    public function makeFile($file,$tplContent)
+    {
+        $output = new Output();
+        return file_put_contents($file, $tplContent)
+            ?$output->info("\033[32m".$file."创建成功"."\033[0m")
+            :$output->info($file."创建失败");
     }
 }
