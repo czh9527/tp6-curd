@@ -11,6 +11,7 @@ namespace app<namespace>model;
 use app<namespace>common\Output;
 use think\model;
 use Exception;
+use think\facade\Db;
 class <model> extends Model
 {
 	use Output;
@@ -64,9 +65,12 @@ class <model> extends Model
     */
     public function add<model>($param)
     {
+        Db::startTrans();
         try {
             $res= $this->save($param);
+            Db::commit();
         } catch(Exception $e) {
+            Db::rollback();
             return self::Error([],"新增失败~",400);
         }
         return self::Success($res,"新增成功~",200);
@@ -105,6 +109,7 @@ class <model> extends Model
     */
     public function edit<model>($param)
     {
+        Db::startTrans();
         try {
             $data=$this->where('<pk>', $param['<pk>'])->find();
             if($data)
@@ -115,7 +120,9 @@ class <model> extends Model
             {
                 return self::Error([],"不存在该数据~",204);
             }
+            Db::commit();
         } catch(Exception $e) {
+            Db::rollback();
             return self::Error([],"编辑失败~",400);
         }
         if($res)
@@ -136,10 +143,13 @@ class <model> extends Model
     */
     public function del<model>By<pk>($<pk>)
     {
+        Db::startTrans();
         try { <relationDelModel>
             // TODO 不可删除校验
             $res=$this->destroy($<pk>);
+            Db::commit();
         } catch(Exception $e) {
+            Db::rollback();
             return self::Error([],"删除失败~",400);
         }
         if($res)
