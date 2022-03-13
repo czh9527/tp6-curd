@@ -68,12 +68,12 @@ class ModelAutoMake implements IAutoMake
             }
         }
         $getAllListByPid='   
-    public $idList=[]; 
+    public $childList=[]; //所有孩子数据
     /**
      * Notes: 递归查询所有孩子（包括孩子的孩子）
      * Author: <user>
      */
-    public function getAllListByPid($pid)
+    public function getAllChildByPid($pid)
     {
         try {
             $res = $this->where([\'pid\' => $pid])->field(\'id\')->select();
@@ -82,8 +82,8 @@ class ModelAutoMake implements IAutoMake
         }
         if (count($res)) {
             foreach ($res as $key => $value) {
-                $this->idList[]=$value[\'id\'];
-                $this->getAllListByPid($value[\'id\']);
+                $this->childList[]=$value[\'id\'];
+                $this->getAllChildByPid($value[\'id\']);
             }
         }
 

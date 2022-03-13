@@ -75,7 +75,49 @@ class <controller> extends BaseController
             return $res;
         }
     }
+		
+	/**
+     * @Apidoc\Author("<user>")
+     * @Apidoc\Title("详细-查询单条数据")
+     * @Apidoc\Desc("根据<pk>获取数据")
+     * @Apidoc\Method("GET")
+     * @Apidoc\Tag("开发中")
+     * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
+     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+     */
+    public function read(Request $request)
+    {
+        if($request->isGet())
+        {
+            $request_data=$request->param();
+            $<pk>=$request_data['<pk>'];
 
+            $res = $this->model->get<model>By<pk>($<pk>);
+            return $res;
+        }
+    }
+	
+    /**
+     * @Apidoc\Author("<user>")
+     * @Apidoc\Title("详细-查询多条数据")
+     * @Apidoc\Desc("根据<pk>数组获取数据")
+     * @Apidoc\Method("GET")
+     * @Apidoc\Tag("开发中")
+     * @Apidoc\Param("<pk>s", type="array",require=true, desc="主键数组")
+     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+     */
+    public function multiRead(Request $request)
+    {
+        if($request->isGet())
+        {
+            $request_data=$request->param();
+            $<pk>s=$request_data['<pk>s'];
+
+            $res = $this->model->get<model>By<pk>s($<pk>s);
+            return $res;
+        }
+    }
+	
     /**
      * @Apidoc\Author("<user>")
      * @Apidoc\Title("新增")
@@ -101,27 +143,6 @@ class <controller> extends BaseController
             return $res;
         }
 
-    }
-
-    /**
-     * @Apidoc\Author("<user>")
-     * @Apidoc\Title("详细-查询单条数据")
-     * @Apidoc\Desc("根据<pk>获取数据")
-     * @Apidoc\Method("GET")
-     * @Apidoc\Tag("开发中")
-     * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
-     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
-     */
-    public function read(Request $request)
-    {
-        if($request->isGet())
-        {
-            $request_data=$request->param();
-            $<pk>=$request_data['<pk>'];
-
-            $res = $this->model->get<model>By<pk>($<pk>);
-            return $res;
-        }
     }
 
     /**
@@ -197,7 +218,7 @@ class <controller> extends BaseController
                 }
             }
             $flagArray=[];
-            foreach ($res as $key => $value)
+            foreach ($res as $value)
             {
                 $flag = 1;
                 if(strpos($value,"导入失败"))
@@ -207,7 +228,7 @@ class <controller> extends BaseController
                 $flagArray[]=$flag;
             }
             $sum=0;
-            foreach ($flagArray as $key => $value)
+            foreach ($flagArray as $value)
             {
                 $sum=$sum+$value;
             }

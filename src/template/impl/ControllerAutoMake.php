@@ -84,11 +84,11 @@ class ControllerAutoMake implements IAutoMake
     {
         \$request_data=\$request->param();
 
-        \$this->model->idList=[];//初始化id列表
-        \$this->model->idList[]=\$request_data['<pk>'];//放入自己
+        \$this->model->childList=[];//初始化id列表
+        \$this->model->childList[]=\$request_data['<pk>'];//放入自己
 
-        \$this->model->getAllListByPid(\$request_data['<pk>']);//获取所有孩子
-        return \$this->model->del<model>Byid(\$this->model->idList);
+        \$this->model->getAllChildByPid(\$request_data['<pk>']);//获取所有孩子
+        return \$this->model->del<model>Byid(\$this->model->childList);
 
    }";
         $getChils='    
@@ -106,11 +106,11 @@ class ControllerAutoMake implements IAutoMake
         if($request->isGet())
         {
             $request_data=$request->param();
-            $this->model->idList=[];
-            $this->model->idList[]=$request_data[\'id\'];//加入自己
+            $this->model->childList=[];
+            $this->model->childList[]=$request_data[\'id\'];//加入自己
             //递归所有子，再输出
-            $this->model->getAllListByPid($request_data[\'id\']);
-            return $this->model->get<model>Byid($this->model->idList);
+            $this->model->getAllChildByPid($request_data[\'id\']);
+            return $this->model->get<model>Byids($this->model->childList);
         }
     }';
 
@@ -223,22 +223,22 @@ class ControllerAutoMake implements IAutoMake
             $zm = $this->IntToChr($i);
             //处理
             $param='
-            $param[\''.$zdvalue[$i].'\']=$excel_array[$i]['.$i.'];';
+                $param[\''.$zdvalue[$i].'\']=$excel_array[$i]['.$i.'];';
 
             $btdata="
-        ->setCellValue('".$zm."1', '".$zdms[$i]."')";
+            ->setCellValue('".$zm."1', '".$zdms[$i]."')";
 
             $btCenter='
-        $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'1'.'\')->applyFromArray($styleArray);';
+            $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'1'.'\')->applyFromArray($styleArray);';
 
             $btColomnCenter='
-        $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'\')->applyFromArray($styleArray);';
+            $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'\')->applyFromArray($styleArray);';
 
             $dygWidth='
-        $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension(\''.$zm.'\')->setWidth(10);';
+            $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension(\''.$zm.'\')->setWidth(10);';
 
             $addTableData='
-        $objPHPExcel->getActiveSheet()->setCellValue(\''.$zm.'\' . ($i + 2), $con[$i][\''.$zdvalue[$i].'\']);';
+                $objPHPExcel->getActiveSheet()->setCellValue(\''.$zm.'\' . ($i + 2), $con[$i][\''.$zdvalue[$i].'\']);';
 
             $paramData=$paramData.$param;
             $btdataData=$btdataData.$btdata;

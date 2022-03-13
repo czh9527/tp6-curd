@@ -56,7 +56,56 @@ class <model> extends Model
             return self::Success($res,"请求数据成功~",200);
         }
     }
+	
+    /**
+    * Notes: 根据<pk>获取信息
+	* Author: <user>
+    * @param $<pk>
+    * @return \think\Response
+    */
+    public function get<model>By<pk>($<pk>)
+    {
+        try {
+            $res = $this->find($<pk>);
+        } catch(Exception $e) {
 
+            return self::Error([],"查询数据失败~",400);
+        }
+
+        if($res->isEmpty())
+        {
+            return self::Success($res,"查询数据为空~",204);
+        }
+        else
+        {
+            return self::Success($res,"查询数据成功~",200);
+        }
+    }
+	
+   /**
+    * Notes: 根据<pk>数组获取信息
+	* Author: <user>
+    * @param $<pk>s
+    * @return \think\Response
+    */
+    public function get<model>By<pk>s($<pk>s)
+    {
+        try {
+            $res = $this->select($<pk>s);
+        } catch(Exception $e) {
+            return self::Error([],"查询数据失败~",400);
+        }
+
+        if($res->isEmpty())
+        {
+            return self::Success($res,"查询数据为空~",204);
+        }
+        else
+        {
+            return self::Success($res,"查询数据成功~",200);
+        }
+    }
+	
     /**
     * Notes: 添加信息
 	* Author: <user>
@@ -74,31 +123,6 @@ class <model> extends Model
             return self::Error([],"新增失败~",400);
         }
         return self::Success($res,"新增成功~",200);
-    }
-
-    /**
-    * Notes: 根据<pk>获取信息-也可传数组
-	* Author: <user>
-    * @param $<pk>
-    * @return \think\Response
-    */
-    public function get<model>By<pk>($<pk>)
-    {
-        try {
-            $res = $this->select($id);
-        } catch(Exception $e) {
-
-            return self::Error([],"查询数据失败~",400);
-        }
-
-        if($res->isEmpty())
-        {
-            return self::Success($res,"查询数据为空~",204);
-        }
-        else
-        {
-            return self::Success($res,"查询数据成功~",200);
-        }
     }
 
     /**
