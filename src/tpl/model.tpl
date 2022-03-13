@@ -66,7 +66,7 @@ class <model> extends Model
     public function get<model>By<pk>($<pk>)
     {
         try {
-            $res = $this->find($<pk>);
+            $res = $this->findOrEmpty($<pk>);
         } catch(Exception $e) {
 
             return self::Error([],"查询数据失败~",400);
