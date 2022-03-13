@@ -91,7 +91,7 @@ class <model> extends Model
             return self::Error([],"查询数据失败~",400);
         }
 
-        if(!$res)
+        if($res->isEmpty())
         {
             return self::Success($res,"查询数据为空~",204);
         }
@@ -125,13 +125,14 @@ class <model> extends Model
             Db::rollback();
             return self::Error([],"编辑失败~",400);
         }
-        if($res)
+        if($res->isEmpty())
         {
-            return self::Success($res,"编辑成功~",200);
+            return self::Success($res,"数据未发生改变~",204);
+
         }
         else
         {
-            return self::Success($res,"数据未发生改变~",204);
+            return self::Success($res,"编辑成功~",200);
         }
     }
 

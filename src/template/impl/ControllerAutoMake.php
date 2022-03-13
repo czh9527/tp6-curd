@@ -73,24 +73,22 @@ class ControllerAutoMake implements IAutoMake
         $delete="    
     public function del(Request \$request)
     {
-        $<model>Model = new <model>Model();
         \$request_data=\$request->param();
         $<pk> = \$request_data['<pk>'];
 
-        \$res = $<model>Model->del<model>By<pk>($<pk>);
+        \$res = \$this->model->del<model>By<pk>($<pk>);
         return \$res;
    }";
         $deleteHavePid="    
     public function del(Request \$request)
     {
-        \$<model>Model = new <model>Model();
         \$request_data=\$request->param();
 
-        \$<model>Model->idList=[];//初始化id列表
-        \$<model>Model->idList[]=\$request_data['<pk>'];//放入自己
+        \$this->model->idList=[];//初始化id列表
+        \$this->model->idList[]=\$request_data['<pk>'];//放入自己
 
-        \$<model>Model->getAllListByPid(\$request_data['<pk>']);//获取所有孩子
-        return \$<model>Model->del<model>Byid(\$<model>Model->idList);
+        \$this->model->getAllListByPid(\$request_data['<pk>']);//获取所有孩子
+        return \$this->model->del<model>Byid(\$this->model->idList);
 
    }";
         $getChils='    
@@ -105,12 +103,15 @@ class ControllerAutoMake implements IAutoMake
      */
     public function getchilds(Request $request)
     {
-        $request_data=$request->param();
-        $this->model->idList=[];
-        $this->model->idList[]=$request_data[\'id\'];//加入自己
-        //递归所有子，再输出
-        $this->model->getAllListByPid($request_data[\'id\']);
-        return $this->model->get<model>Byid($this->model->idList);
+        if($request->isGet())
+        {
+            $request_data=$request->param();
+            $this->model->idList=[];
+            $this->model->idList[]=$request_data[\'id\'];//加入自己
+            //递归所有子，再输出
+            $this->model->getAllListByPid($request_data[\'id\']);
+            return $this->model->get<model>Byid($this->model->idList);
+        }
     }';
 
         if($have_pid)
