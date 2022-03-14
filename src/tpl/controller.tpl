@@ -138,30 +138,11 @@ class <controller> extends BaseController
             } catch (ValidateException $e) {
                 return self::Error([],$e->getError(),400);
             }
-
-            $res = $this->model->add<model>($request_data);
+            $allowField=<allowField>;
+            $res = $this->model->add<model>($request_data,$allowField);
             return $res;
         }
 
-    }
-
-    /**
-     * @Apidoc\Author("<user>")
-     * @Apidoc\Title("详细-查询单条数据")
-     * @Apidoc\Desc("根据<pk>获取数据")
-     * @Apidoc\Method("GET")
-     * @Apidoc\Tag("开发中"
-     * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
-     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
-     */
-    public function read(Request $request)
-    {
-		$<model>Model = new <model>Model();
-        $request_data=$request->param();
-        $<pk>=$request_data['<pk>'];
-		
-        $res = $<model>Model->get<model>By<pk>($<pk>);
-        return $res;
     }
 
     /**
@@ -184,8 +165,8 @@ class <controller> extends BaseController
             } catch (ValidateException $e) {
                 return self::Error([],$e->getError(),400);
             }
-
-            $res = $this->model->edit<model>($request_data);
+            $allowField=<allowField>;
+            $res = $this->model->edit<model>($request_data,$allowField);
             return $res;
         }
     }

@@ -8,6 +8,8 @@ namespace czh9527\tp6curd\template\impl;
 
 use czh9527\tp6curd\extend\Utils;
 use czh9527\tp6curd\template\IAutoMake;
+use Symfony\Component\VarDumper\VarDumper;
+use Symfony\Component\VarExporter\VarExporter;
 use think\facade\App;
 use think\facade\Db;
 use think\console\Output;
@@ -156,7 +158,11 @@ class ControllerAutoMake implements IAutoMake
             }
 
         }
-        
+        //替换allowField允许输入的字段
+        $allowField=VarExporter::export($zdvalue);
+        $tplContent = str_replace('<allowField>', $allowField, $tplContent);
+
+        //替换apidoc
         $apidocdata='';
       
         for($j=0;$j<count($zdvalue);$j++)

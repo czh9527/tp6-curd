@@ -112,11 +112,11 @@ class <model> extends Model
     * @param $param
     * @return \think\Response
     */
-    public function add<model>($param)
+    public function add<model>($param,$allowField)
     {
         Db::startTrans();
         try {
-            $res= $this->save($param);
+            $res= $this->allowField($allowField)->save($param);
             Db::commit();
         } catch(Exception $e) {
             Db::rollback();
@@ -131,14 +131,14 @@ class <model> extends Model
     * @param $param
     * @return \think\Response
     */
-    public function edit<model>($param)
+    public function edit<model>($param,$allowField)
     {
         Db::startTrans();
         try {
             $data=$this->where('<pk>', $param['<pk>'])->find();
             if($data)
             {
-                $res=$data->update($param);
+                $res=$data->allowField($allowField)->update($param);
             }
             else
             {
@@ -149,15 +149,7 @@ class <model> extends Model
             Db::rollback();
             return self::Error([],"编辑失败~",400);
         }
-        if($res->isEmpty())
-        {
-            return self::Success($res,"数据未发生改变~",204);
-
-        }
-        else
-        {
-            return self::Success($res,"编辑成功~",200);
-        }
+        return self::Success($res,"编辑成功~",200);
     }
 
     /**
