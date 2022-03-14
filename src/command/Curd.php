@@ -80,7 +80,6 @@ class Curd extends Command
         $controller = ucfirst(Utils::camelize($table));
         
         $conrollerFile=App::getAppPath() . $path . DS . 'controller' . DS . $controller . '.php';
-        $excelConrollerFile=App::getAppPath() . $path . DS . 'controller' . DS . $controller .'Excel'. '.php';
         $modelFile=App::getAppPath() . $path . DS . 'model' . DS . $controller . '.php';
         $validateFile=App::getAppPath() .  $path . DS . 'validate' . DS . $controller . '.php';
         
@@ -88,7 +87,7 @@ class Curd extends Command
         $delete = $input->getOption('delete');
         if ($delete) {
             $output->info("文件列表:");
-            $readyFiles = [$conrollerFile,$excelConrollerFile, $modelFile, $validateFile];
+            $readyFiles = [$conrollerFile, $modelFile, $validateFile];
             foreach ($readyFiles as $k => $v) {
                 $output->warning($v);
             }
