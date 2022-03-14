@@ -28,8 +28,9 @@ class ModelAutoMake implements IAutoMake
         if (file_exists($modelFilePath)) {
             $output = new Output();
             $output->error("\033[31m"."$modelFilePath 已经存在"."\033[0m");
-            exit;
+            return true;
         }
+        return false;
     }
 
     public function make($table, $path, $relations)
@@ -67,12 +68,12 @@ class ModelAutoMake implements IAutoMake
             }
         }
         $getAllListByPid='   
-    public $idList=[]; 
+    public $childList=[]; //所有孩子数据
     /**
      * Notes: 递归查询所有孩子（包括孩子的孩子）
      * Author: <user>
      */
-    public function getAllListByPid($pid)
+    public function getAllChildByPid($pid)
     {
         try {
             $res = $this->where([\'pid\' => $pid])->field(\'id\')->select();
@@ -81,8 +82,8 @@ class ModelAutoMake implements IAutoMake
         }
         if (count($res)) {
             foreach ($res as $key => $value) {
-                $this->idList[]=$value[\'id\'];
-                $this->getAllListByPid($value[\'id\']);
+                $this->childList[]=$value[\'id\'];
+                $this->getAllChildByPid($value[\'id\']);
             }
         }
 
@@ -188,6 +189,13 @@ class ModelAutoMake implements IAutoMake
 
 
         $file =App::getAppPath() . $filePath . DS . 'model' . DS . $model . '.php';
-        return file_put_contents($file, $tplContent);
+        return $this->makeFile($file, $tplContent);
+    }
+    public function makeFile($file,$tplContent)
+    {
+        $output = new Output();
+        return file_put_contents($file, $tplContent)
+            ?$output->info("\033[32m".$file."创建成功"."\033[0m")
+            :$output->info($file."创建失败");
     }
 }

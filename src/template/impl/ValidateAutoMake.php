@@ -23,8 +23,9 @@ class ValidateAutoMake implements IAutoMake
         if (file_exists($validateFilePath)) {
             $output = new Output();
             $output->error("\033[31m"."$validateFilePath 已经存在"."\033[0m");
-            exit;
+            return true;
         }
+        return false;
     }
 
     public function make($table, $path, $relations)
@@ -53,7 +54,7 @@ class ValidateAutoMake implements IAutoMake
             }
         }
         foreach ($column as $vo) {
-            if($vo['Field']!='create_time' && $vo['Field']!='create_user' &&$vo['Field']!='compy_id' ) {
+            if($vo['Field']!='create_time' && $vo['Field']!='create_user') {
                 //编辑json
                 if (strpos($vo['Type'], 'int') !== false) {
                     $json[$vo['Field']] = 1;
@@ -113,8 +114,7 @@ class ValidateAutoMake implements IAutoMake
         }
 
         
-        file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS .
-            $table.".易文档传参.log",json_encode($json));//写外部json
+
 
         $ruleArr = VarExporter::export($rule);
         $attributesArr = VarExporter::export($attributes);
@@ -139,6 +139,14 @@ class ValidateAutoMake implements IAutoMake
 
 
         $file =App::getAppPath() . $filePath . DS . 'validate' . DS . $model . '.php';
-        return file_put_contents($file, $tplContent);
+        return $this->makeFile($file, $tplContent);
+    }
+
+    public function makeFile($file,$tplContent)
+    {
+        $output = new Output();
+        return file_put_contents($file, $tplContent)
+            ?$output->info("\033[32m".$file."创建成功"."\033[0m")
+            :$output->info($file."创建失败");
     }
 }

@@ -11,6 +11,7 @@ namespace app<namespace>model;
 use app<namespace>common\Output;
 use think\model;
 use Exception;
+use think\facade\Db;
 class <model> extends Model
 {
 	use Output;
@@ -22,7 +23,6 @@ class <model> extends Model
     public static function onBeforeInsert($data)// TODO 是否需要下面数据
     {
         $data['create_user']=request()->userinfo['aud'];
-        $data['compy_id']=request()->userinfo['compy_id'];
         $data['create_time']=time();
     }
     <frelationModel><relationModel><getAllListByPid>
@@ -56,7 +56,56 @@ class <model> extends Model
             return self::Success($res,"请求数据成功~",200);
         }
     }
+	
+    /**
+    * Notes: 根据<pk>获取信息
+	* Author: <user>
+    * @param $<pk>
+    * @return \think\Response
+    */
+    public function get<model>By<pk>($<pk>)
+    {
+        try {
+            $res = $this->findOrEmpty($<pk>);
+        } catch(Exception $e) {
 
+            return self::Error([],"查询数据失败~",400);
+        }
+
+        if($res->isEmpty())
+        {
+            return self::Success($res,"查询数据为空~",204);
+        }
+        else
+        {
+            return self::Success($res,"查询数据成功~",200);
+        }
+    }
+	
+   /**
+    * Notes: 根据<pk>数组获取信息
+	* Author: <user>
+    * @param $<pk>s
+    * @return \think\Response
+    */
+    public function get<model>By<pk>s($<pk>s)
+    {
+        try {
+            $res = $this->select($<pk>s);
+        } catch(Exception $e) {
+            return self::Error([],"查询数据失败~",400);
+        }
+
+        if($res->isEmpty())
+        {
+            return self::Success($res,"查询数据为空~",204);
+        }
+        else
+        {
+            return self::Success($res,"查询数据成功~",200);
+        }
+    }
+	
     /**
     * Notes: 添加信息
 	* Author: <user>
@@ -65,37 +114,15 @@ class <model> extends Model
     */
     public function add<model>($param)
     {
+        Db::startTrans();
         try {
             $res= $this->save($param);
+            Db::commit();
         } catch(Exception $e) {
+            Db::rollback();
             return self::Error([],"新增失败~",400);
         }
         return self::Success($res,"新增成功~",200);
-    }
-
-    /**
-    * Notes: 根据<pk>获取信息-也可传数组
-	* Author: <user>
-    * @param $<pk>
-    * @return \think\Response
-    */
-    public function get<model>By<pk>($<pk>)
-    {
-        try {
-            $res = $this->select($id);
-        } catch(Exception $e) {
-
-            return self::Error([],"查询数据失败~",400);
-        }
-
-        if(!$res)
-        {
-            return self::Success($res,"查询数据为空~",204);
-        }
-        else
-        {
-            return self::Success($res,"查询数据成功~",200);
-        }
     }
 
     /**
@@ -106,6 +133,7 @@ class <model> extends Model
     */
     public function edit<model>($param)
     {
+        Db::startTrans();
         try {
             $data=$this->where('<pk>', $param['<pk>'])->find();
             if($data)
@@ -116,16 +144,19 @@ class <model> extends Model
             {
                 return self::Error([],"不存在该数据~",204);
             }
+            Db::commit();
         } catch(Exception $e) {
+            Db::rollback();
             return self::Error([],"编辑失败~",400);
         }
-        if($res)
+        if($res->isEmpty())
         {
-            return self::Success($res,"编辑成功~",200);
+            return self::Success($res,"数据未发生改变~",204);
+
         }
         else
         {
-            return self::Success($res,"数据未发生改变~",204);
+            return self::Success($res,"编辑成功~",200);
         }
     }
 
@@ -137,10 +168,13 @@ class <model> extends Model
     */
     public function del<model>By<pk>($<pk>)
     {
+        Db::startTrans();
         try { <relationDelModel>
             // TODO 不可删除校验
             $res=$this->destroy($<pk>);
+            Db::commit();
         } catch(Exception $e) {
+            Db::rollback();
             return self::Error([],"删除失败~",400);
         }
         if($res)

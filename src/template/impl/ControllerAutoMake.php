@@ -28,8 +28,9 @@ class ControllerAutoMake implements IAutoMake
         if (file_exists($controllerFilePath)) {
             $output = new Output();
             $output->error("\033[31m"."$controllerFilePath 已经存在"."\033[0m");
-            exit;
+            return true;
         }
+        return false;
     }
 
     public function make($controller, $path, $table)
@@ -72,24 +73,22 @@ class ControllerAutoMake implements IAutoMake
         $delete="    
     public function del(Request \$request)
     {
-        $<model>Model = new <model>Model();
         \$request_data=\$request->param();
         $<pk> = \$request_data['<pk>'];
 
-        \$res = $<model>Model->del<model>By<pk>($<pk>);
+        \$res = \$this->model->del<model>By<pk>($<pk>);
         return \$res;
    }";
         $deleteHavePid="    
     public function del(Request \$request)
     {
-        \$<model>Model = new <model>Model();
         \$request_data=\$request->param();
 
-        \$<model>Model->idList=[];//初始化id列表
-        \$<model>Model->idList[]=\$request_data['<pk>'];//放入自己
+        \$this->model->childList=[];//初始化id列表
+        \$this->model->childList[]=\$request_data['<pk>'];//放入自己
 
-        \$<model>Model->getAllListByPid(\$request_data['<pk>']);//获取所有孩子
-        return \$<model>Model->del<model>Byid(\$<model>Model->idList);
+        \$this->model->getAllChildByPid(\$request_data['<pk>']);//获取所有孩子
+        return \$this->model->del<model>Byid(\$this->model->childList);
 
    }";
         $getChils='    
@@ -104,13 +103,15 @@ class ControllerAutoMake implements IAutoMake
      */
     public function getchilds(Request $request)
     {
-        $<model>Model = new <model>Model();
-        $request_data=$request->param();
-        $<model>Model->idList=[];
-        $<model>Model->idList[]=$request_data[\'id\'];//加入自己
-        //递归所有子，再输出
-        $<model>Model->getAllListByPid($request_data[\'id\']);
-        return $<model>Model->get<model>Byid($<model>Model->idList);
+        if($request->isGet())
+        {
+            $request_data=$request->param();
+            $this->model->childList=[];
+            $this->model->childList[]=$request_data[\'id\'];//加入自己
+            //递归所有子，再输出
+            $this->model->getAllChildByPid($request_data[\'id\']);
+            return $this->model->get<model>Byids($this->model->childList);
+        }
     }';
 
         if($have_pid)
@@ -130,7 +131,7 @@ class ControllerAutoMake implements IAutoMake
         $zddefault=[];
         $zdms=[];
         foreach ($column as $vo) {
-            if($vo['Key']!='PRI' && $vo['Field']!='create_time' && $vo['Field']!='create_user' &&$vo['Field']!='compy_id' )
+            if($vo['Key']!='PRI' && $vo['Field']!='create_time' && $vo['Field']!='create_user' )
             {
                 $zdvalue[]=$vo['Field'];
                 $zdtype[]=$vo['Type'];
@@ -222,22 +223,22 @@ class ControllerAutoMake implements IAutoMake
             $zm = $this->IntToChr($i);
             //处理
             $param='
-            $param[\''.$zdvalue[$i].'\']=$excel_array[$i]['.$i.'];';
+                $param[\''.$zdvalue[$i].'\']=$excel_array[$i]['.$i.'];';
 
             $btdata="
-        ->setCellValue('".$zm."1', '".$zdms[$i]."')";
+            ->setCellValue('".$zm."1', '".$zdms[$i]."')";
 
             $btCenter='
-        $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'1'.'\')->applyFromArray($styleArray);';
+            $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'1'.'\')->applyFromArray($styleArray);';
 
             $btColomnCenter='
-        $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'\')->applyFromArray($styleArray);';
+            $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'\')->applyFromArray($styleArray);';
 
             $dygWidth='
-        $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension(\''.$zm.'\')->setWidth(10);';
+            $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension(\''.$zm.'\')->setWidth(10);';
 
             $addTableData='
-        $objPHPExcel->getActiveSheet()->setCellValue(\''.$zm.'\' . ($i + 2), $con[$i][\''.$zdvalue[$i].'\']);';
+                $objPHPExcel->getActiveSheet()->setCellValue(\''.$zm.'\' . ($i + 2), $con[$i][\''.$zdvalue[$i].'\']);';
 
             $paramData=$paramData.$param;
             $btdataData=$btdataData.$btdata;
@@ -257,18 +258,15 @@ class ControllerAutoMake implements IAutoMake
 
 
         $file =App::getAppPath() . $filePath . DS . 'controller' . DS . $controller . '.php';
-        return file_put_contents($file, $tplContent);
-
-        // 检测base是否存在--现在不创建babse
-//        if (!file_exists(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php')) {
-//
-//            $controllerTpl = dirname(dirname(__DIR__)) . '/tpl/baseController.tpl';
-//            $tplContent = file_get_contents($controllerTpl);
-//
-//            $tplContent = str_replace('<namespace>', $namespace, $tplContent);
-//
-//            file_put_contents(App::getAppPath() . $filePath . DS . 'controller' . DS . 'Base.php', $tplContent);
-//        }
+        return $this->makeFile($file, $tplContent);
+        
+    }
+    public function makeFile($file,$tplContent)
+    {
+        $output = new Output();
+        return file_put_contents($file, $tplContent)
+            ?$output->info("\033[32m".$file."创建成功"."\033[0m")
+            :$output->info($file."创建失败");
     }
 
     public static function IntToChr($pColumnIndex = 0)

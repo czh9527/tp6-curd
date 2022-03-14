@@ -19,7 +19,13 @@ class AutoMakeStrategy
 
     public function executeStrategy($flag, $path, $other)
     {
-        $this->strategy->check($flag, $path);
-        return $this->strategy->make($flag, $path, $other);
+        if($this->strategy->check($flag, $path))
+        {
+            return false;
+        }
+        else
+        {
+            return $this->strategy->make($flag, $path, $other);
+        }
     }
 }
