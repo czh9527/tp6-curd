@@ -101,7 +101,7 @@ class ControllerAutoMake implements IAutoMake
      * @Apidoc\Method("GET")
      * @Apidoc\Tag("开发中")
      * @Apidoc\Param("id", type="int",require=true,default="1", desc="当前节点id")
-     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+     * @Apidoc\Returned(ref="app\admin\model\<model>\getReturn")
      */
     public function getchilds(Request $request)
     {
@@ -125,15 +125,25 @@ class ControllerAutoMake implements IAutoMake
             $tplContent = str_replace('<delete>', $delete, $tplContent);
             $tplContent = str_replace('<getChilds>', '', $tplContent);
         }
+        //替换allowField允许输入的字段
+        $zd=[];
+        foreach ($column as $vo) {
+            if($vo['Key']!='PRI')
+            {
+                $zd[]=$vo['Field'];
+            }
+
+        }
+        $allowField=VarExporter::export($zd);
+        $tplContent = str_replace('<allowField>', $allowField, $tplContent);
         //apidoc
-//        * @Apidoc\Param("<zdvalue>", type="<zdtype>",require=true,default="<zddefault>", desc="<zdms>")
 
         $zdvalue=[];
         $zdtype=[];
         $zddefault=[];
         $zdms=[];
         foreach ($column as $vo) {
-            if($vo['Key']!='PRI' && $vo['Field']!='create_time' && $vo['Field']!='create_user' )
+            if($vo['Key']!='PRI' && $vo['Field']!='create_time' && $vo['Field']!='create_user' && $vo['Field']!='compy_id' )
             {
                 $zdvalue[]=$vo['Field'];
                 $zdtype[]=$vo['Type'];
@@ -158,9 +168,6 @@ class ControllerAutoMake implements IAutoMake
             }
 
         }
-        //替换allowField允许输入的字段
-        $allowField=VarExporter::export($zdvalue);
-        $tplContent = str_replace('<allowField>', $allowField, $tplContent);
 
         //替换apidoc
         $apidocdata='';

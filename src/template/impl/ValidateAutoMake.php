@@ -54,7 +54,7 @@ class ValidateAutoMake implements IAutoMake
             }
         }
         foreach ($column as $vo) {
-            if($vo['Field']!='create_time' && $vo['Field']!='create_user') {
+            if($vo['Field']!='create_time' && $vo['Field']!='create_user' && $vo['Field']!='compy_id') {
                 //编辑json
                 if (strpos($vo['Type'], 'int') !== false) {
                     $json[$vo['Field']] = 1;

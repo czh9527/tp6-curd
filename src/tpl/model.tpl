@@ -8,14 +8,23 @@
 namespace app<namespace>model;
 
 //<tableIntroduce>
-use app<namespace>common\Output;
+use app\common\Output;
 use think\model;
 use Exception;
 use think\facade\Db;
+use hg\apidoc\annotation\Field;
+use hg\apidoc\annotation\WithoutField;
+use hg\apidoc\annotation\AddField;
+use hg\apidoc\annotation\Param;
 class <model> extends Model
 {
 	use Output;
 	protected $pk = '<pk>';
+    /**
+    * apidoc注释获取
+    */
+    public function getReturn(){}
+
     /**
     * Notes: 新增数据前
     * Author: <user>
@@ -123,7 +132,7 @@ class <model> extends Model
             Db::rollback();
             return self::Error([],"新增失败~",400);
         }
-        return self::Success($res,"新增成功~",200);
+        return self::Success($this-><pk>,"新增成功~",200);
     }
 
     /**
@@ -162,7 +171,11 @@ class <model> extends Model
     public function del<model>By<pk>($<pk>)
     {
         Db::startTrans();
-        try { <relationDelModel>
+        try {
+            if($this->findOrEmpty($<pk>)->isEmpty())
+            {
+                return self::Success([],"该数据已被删除~",204);
+            }<relationDelModel>
             // TODO 不可删除校验
             $res=$this->destroy($<pk>);
             Db::commit();
@@ -170,14 +183,8 @@ class <model> extends Model
             Db::rollback();
             return self::Error([],"删除失败~",400);
         }
-        if($res)
-        {
-            return self::Success($res,"删除成功~",200);
-        }
-        else
-        {
-            return self::Success($res,"该数据已被删除~",204);
-        }
+        return self::Success($res,"删除成功~",200);
+
     }
 }
 

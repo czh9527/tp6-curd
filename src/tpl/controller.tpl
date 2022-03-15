@@ -8,7 +8,6 @@
 namespace app<namespace>controller;
 
 use app<namespace>exception\BaseController;
-use app<namespace>model\<model> as <model>Model;
 use app<namespace>validate\<model> as <model>Validate;
 use think\exception\ValidateException;
 use think\Request;
@@ -39,11 +38,12 @@ class <controller> extends BaseController
      * @Apidoc\Desc("获取最基础数据")
      * @Apidoc\Method("GET")
      * @Apidoc\Tag("开发中")
-     * @Apidoc\Param("in_search", type="string",default="", desc="模糊查询数据")
-     * @Apidoc\Param("page", type="string",default="1", desc="页码")
-     * @Apidoc\Param("page_size", type="int",default="1",desc="一页的大小")
+     * @Apidoc\Param(ref="page")
      * @Apidoc\Param("is_all", type="int",default="0",desc="是否输出全部数据，默认使用分页输出")
-     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+     * @Apidoc\Returned(ref="page")
+     * @Apidoc\Returned("data",type="array",childrenType="object",desc="业务数据",
+     *      @Apidoc\Returned (ref="app\admin\model\<model>\getReturn"),
+     * )
      */
     public function index(Request $request)
     {
@@ -83,7 +83,7 @@ class <controller> extends BaseController
      * @Apidoc\Method("GET")
      * @Apidoc\Tag("开发中")
      * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
-     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+     * @Apidoc\Returned(ref="app\admin\model\<model>\getReturn")
      */
     public function read(Request $request)
     {
@@ -104,7 +104,7 @@ class <controller> extends BaseController
      * @Apidoc\Method("GET")
      * @Apidoc\Tag("开发中")
      * @Apidoc\Param("<pk>s", type="array",require=true, desc="主键数组")
-     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+     * @Apidoc\Returned(ref="app\admin\model\<model>\getReturn")
      */
     public function multiRead(Request $request)
     {
@@ -124,7 +124,7 @@ class <controller> extends BaseController
      * @Apidoc\Desc("新增数据")
      * @Apidoc\Method("POST")
      * @Apidoc\Tag("开发中")
-<addApidoc>     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+<addApidoc>     * @Apidoc\Returned("data", type="int", desc="主键<pk>",replaceGlobal=true)
      */
     public function add(Request $request)
     {
@@ -151,7 +151,7 @@ class <controller> extends BaseController
      * @Apidoc\Desc("编辑数据")
      * @Apidoc\Method("PUT")
      * @Apidoc\Tag("开发中")
-<editApidoc>     * @Apidoc\Returned("data", type="array", desc="数据列表",replaceGlobal=true)
+<editApidoc>     * @Apidoc\Returned(ref="app\admin\model\<model>\getReturn")
      */
     public function edit(Request $request)
     {
@@ -178,7 +178,7 @@ class <controller> extends BaseController
      * @Apidoc\Method("DELETE")
      * @Apidoc\Tag("开发中")
      * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
-     * @Apidoc\Returned("data", type="int", desc="是否删除成功")
+     * @Apidoc\Returned("data", type="bool", desc="是否删除成功",replaceGlobal=true)
      */<delete>
 
    	/**
