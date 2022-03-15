@@ -22,6 +22,7 @@ class <model> extends Model
     */
     public static function onBeforeInsert($data)// TODO 是否需要下面数据
     {
+        $data['compy_id']=request()->userinfo['compy_id'];
         $data['create_user']=request()->userinfo['aud'];
         $data['create_time']=time();
     }
