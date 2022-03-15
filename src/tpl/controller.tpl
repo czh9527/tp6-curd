@@ -23,13 +23,13 @@ class <controller> extends BaseController
 {
     /**
      * <model>模型对象
-     * @var \app\admin\model\<model>
+     * @var \app<namespace>model\<model>
      */
     protected $model = null;
     public function initialize()
     {
         parent::initialize();
-        $this->model = new \app\admin\model\<model>;
+        $this->model = new \app<namespace>model\<model>;
     }<getChilds>
 
     /**
@@ -42,7 +42,7 @@ class <controller> extends BaseController
      * @Apidoc\Param("is_all", type="int",default="0",desc="是否输出全部数据，默认使用分页输出")
      * @Apidoc\Returned(ref="page")
      * @Apidoc\Returned("data",type="array",childrenType="object",desc="业务数据",
-     *      @Apidoc\Returned (ref="app\admin\model\<model>\getReturn"),
+     *      @Apidoc\Returned (ref="app<namespace>model\<model>\getReturn"),
      * )
      */
     public function index(Request $request)
@@ -83,7 +83,7 @@ class <controller> extends BaseController
      * @Apidoc\Method("GET")
      * @Apidoc\Tag("开发中")
      * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
-     * @Apidoc\Returned(ref="app\admin\model\<model>\getReturn")
+     * @Apidoc\Returned(ref="app<namespace>model\<model>\getReturn")
      */
     public function read(Request $request)
     {
@@ -104,7 +104,7 @@ class <controller> extends BaseController
      * @Apidoc\Method("GET")
      * @Apidoc\Tag("开发中")
      * @Apidoc\Param("<pk>s", type="array",require=true, desc="主键数组")
-     * @Apidoc\Returned(ref="app\admin\model\<model>\getReturn")
+     * @Apidoc\Returned(ref="app<namespace>model\<model>\getReturn")
      */
     public function multiRead(Request $request)
     {
@@ -151,7 +151,7 @@ class <controller> extends BaseController
      * @Apidoc\Desc("编辑数据")
      * @Apidoc\Method("PUT")
      * @Apidoc\Tag("开发中")
-<editApidoc>     * @Apidoc\Returned(ref="app\admin\model\<model>\getReturn")
+<editApidoc>     * @Apidoc\Returned(ref="app<namespace>model\<model>\getReturn")
      */
     public function edit(Request $request)
     {

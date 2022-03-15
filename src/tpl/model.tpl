@@ -22,8 +22,9 @@ class <model> extends Model
 	protected $pk = '<pk>';
     /**
     * apidoc注释获取
+    * @Field("<field>")
     */
-    public function getReturn(){}
+    public function getReturn(){ }
 
     /**
     * Notes: 新增数据前

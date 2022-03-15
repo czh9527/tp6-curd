@@ -58,6 +58,12 @@ class ModelAutoMake implements IAutoMake
                 break;
             }
         }
+        //处理apidoc中的field数据
+        $field='';
+        foreach ($column as $vo) {
+            $field=$field.$vo['Field'].',';
+        }
+        $tplContent = str_replace('<field>', $field, $tplContent);
 
         ///处理有pid树的情况
         $have_pid=false;
