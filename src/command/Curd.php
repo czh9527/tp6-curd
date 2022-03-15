@@ -27,9 +27,9 @@ class Curd extends Command
         $this->setName('auto curd')
             ->addOption('table', 't', Option::VALUE_OPTIONAL, '表名', null)
             ->addOption('path', 'p', Option::VALUE_OPTIONAL, '路径', null)
-            ->addOption('delete', 'd', Option::VALUE_OPTIONAL, '删除curd文件', 0)
-            ->addOption('all', 'a', Option::VALUE_OPTIONAL, '安装表格全部curd', 0)
-            ->setDescription('auto make curd file');
+            ->addOption('delete', 'd', Option::VALUE_OPTIONAL, '删除curd文件', null)
+            ->addOption('all', 'a', Option::VALUE_OPTIONAL, '库中所有表curd', null)
+            ->setDescription('自动创建curd代码');
     }
 
     protected function execute(Input $input, Output $output)
