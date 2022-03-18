@@ -76,7 +76,7 @@ class ControllerAutoMake implements IAutoMake
     public function del(Request \$request)
     {
         \$request_data=\$request->param();
-        $<pk> = \$request_data['<pk>'];
+        \$<pk>=\$request_data['<pk>'];
 
         \$res = \$this->model->del<model>By<pk>($<pk>);
         return \$res;

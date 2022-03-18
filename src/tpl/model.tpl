@@ -69,7 +69,7 @@ class <model> extends Model
     }
 	
     /**
-    * Notes: 根据<pk>获取信息
+    * Notes: 根据<pk>获取信息-自动转换为数组
 	* Author: <user>
     * @param $<pk>
     * @return \think\Response
@@ -77,33 +77,10 @@ class <model> extends Model
     public function get<model>By<pk>($<pk>)
     {
         try {
-            $res = $this->findOrEmpty($<pk>);
-        } catch(Exception $e) {
-
-            return self::Error([],"查询数据失败~",400);
-        }
-
-        if($res->isEmpty())
-        {
-            return self::Success($res,"查询数据为空~",204);
-        }
-        else
-        {
-            return self::Success($res,"查询数据成功~",200);
-        }
-    }
-	
-   /**
-    * Notes: 根据<pk>数组获取信息
-	* Author: <user>
-    * @param $<pk>s
-    * @return \think\Response
-    */
-    public function get<model>By<pk>s($<pk>s)
-    {
-        try {
+            $<pk>s=is_array($<pk>)?$<pk>:Array($<pk>);
             $res = $this->select($<pk>s);
         } catch(Exception $e) {
+
             return self::Error([],"查询数据失败~",400);
         }
 
@@ -116,7 +93,7 @@ class <model> extends Model
             return self::Success($res,"查询数据成功~",200);
         }
     }
-	
+
     /**
     * Notes: 添加信息
 	* Author: <user>
@@ -164,7 +141,7 @@ class <model> extends Model
     }
 
     /**
-    * Notes: 删除信息-也可传数组
+    * Notes: 删除信息-自动转换为数组
 	* Author: <user>
     * @param $<pk>
     * @return \think\Response
@@ -172,13 +149,14 @@ class <model> extends Model
     public function del<model>By<pk>($<pk>)
     {
         Db::startTrans();
+        $<pk>s=is_array($<pk>)?$<pk>:Array($<pk>);
         try {
-            if($this->findOrEmpty($<pk>)->isEmpty())
+            if($this->findOrEmpty($<pk>s)->isEmpty())
             {
                 return self::Success([],"该数据已被删除~",204);
             }<relationDelModel>
             // TODO 不可删除校验
-            $res=$this->destroy($<pk>);
+            $res=$this->destroy($<pk>s);
             Db::commit();
         } catch(Exception $e) {
             Db::rollback();
@@ -187,5 +165,6 @@ class <model> extends Model
         return self::Success($res,"删除成功~",200);
 
     }
+
 }
 

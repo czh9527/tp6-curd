@@ -78,8 +78,8 @@ class <controller> extends BaseController
 
 	/**
      * @Apidoc\Author("<user>")
-     * @Apidoc\Title("详细-查询单条数据")
-     * @Apidoc\Desc("根据<pk>获取数据")
+     * @Apidoc\Title("查询-详细")
+     * @Apidoc\Desc("根据<pk>删除数据，支持单条，也支持多条(传数组)")
      * @Apidoc\Method("GET")
      * @Apidoc\Tag("开发中")
      * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
@@ -93,27 +93,6 @@ class <controller> extends BaseController
             $<pk>=$request_data['<pk>'];
 
             $res = $this->model->get<model>By<pk>($<pk>);
-            return $res;
-        }
-    }
-
-    /**
-     * @Apidoc\Author("<user>")
-     * @Apidoc\Title("详细-查询多条数据")
-     * @Apidoc\Desc("根据<pk>数组获取数据")
-     * @Apidoc\Method("GET")
-     * @Apidoc\Tag("开发中")
-     * @Apidoc\Param("<pk>s", type="array",require=true, desc="主键数组")
-     * @Apidoc\Returned(ref="app<namespace>model\<model>\getReturn")
-     */
-    public function multiRead(Request $request)
-    {
-        if($request->isGet())
-        {
-            $request_data=$request->param();
-            $<pk>s=$request_data['<pk>s'];
-
-            $res = $this->model->get<model>By<pk>s($<pk>s);
             return $res;
         }
     }
@@ -174,7 +153,7 @@ class <controller> extends BaseController
     /**
      * @Apidoc\Author("<user>")
      * @Apidoc\Title("删除")
-     * @Apidoc\Desc("根据<pk>删除数据")
+     * @Apidoc\Desc("根据<pk>删除数据，支持单条，也支持多条(传数组)")
      * @Apidoc\Method("DELETE")
      * @Apidoc\Tag("开发中")
      * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
