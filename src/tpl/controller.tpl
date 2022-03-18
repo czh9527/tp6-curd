@@ -79,7 +79,7 @@ class <controller> extends BaseController
 	/**
      * @Apidoc\Author("<user>")
      * @Apidoc\Title("查询-详细")
-     * @Apidoc\Desc("根据<pk>删除数据，支持单条，也支持多条(传数组)")
+     * @Apidoc\Desc("根据<pk>查询数据，支持单条，也支持多条(传数组)")
      * @Apidoc\Method("GET")
      * @Apidoc\Tag("开发中")
      * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
