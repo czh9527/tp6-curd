@@ -150,19 +150,24 @@ class <model> extends Model
     {
         Db::startTrans();
         $<pk>s=is_array($<pk>)?$<pk>:Array($<pk>);
-        try {
-            if($this->findOrEmpty($<pk>s)->isEmpty())
-            {
-                return self::Success([],"该数据已被删除~",204);
-            }<relationDelModel>
+        try { <relationDelModel>
             // TODO 不可删除校验
-            $res=$this->destroy($<pk>s);
+            $res=$this->where('<pk>','in',$<pk>s)->delete();
             Db::commit();
         } catch(Exception $e) {
             Db::rollback();
             return self::Error([],"删除失败~",400);
         }
-        return self::Success($res,"删除成功~",200);
+        if($res)
+        {
+            return self::Success($res,"删除成功~",200);
+
+        }
+        else
+        {
+            return self::Success([],"该数据已被删除~",204);
+        }
+
 
     }
 
