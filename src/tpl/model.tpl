@@ -34,7 +34,6 @@ class <model> extends Model
     {
         $data['compy_id']=request()->userinfo['compy_id'];
         $data['create_user']=request()->userinfo['aud'];
-        $data['create_time']=time();
     }
     <frelationModel><relationModel><getAllListByPid>
     /**
