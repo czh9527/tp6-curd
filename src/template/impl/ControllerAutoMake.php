@@ -105,15 +105,12 @@ class ControllerAutoMake implements IAutoMake
      */
     public function getchilds(Request $request)
     {
-        if($request->isGet())
-        {
-            $request_data=$request->param();
-            $this->model->childList=[];
-            $this->model->childList[]=$request_data[\'id\'];//加入自己
-            //递归所有子，再输出
-            $this->model->getAllChildByPid($request_data[\'id\']);
-            return $this->model->get<model>Byids($this->model->childList);
-        }
+        $request_data=$request->param();
+        $this->model->childList=[];
+        $this->model->childList[]=$request_data[\'id\'];//加入自己
+        //递归所有子，再输出
+        $this->model->getAllChildByPid($request_data[\'id\']);
+        return $this->model->get<model>Byids($this->model->childList);
     }';
 
         if($have_pid)
