@@ -49,16 +49,7 @@ class <controller> extends BaseController
     public function index(Request $request)
     {
         $request_data=$request->param();
-
-        if(isset($request_data['is_all']))
-        {
-            $is_all=$request_data['is_all'];
-        }
-        else
-        {
-            $is_all='';
-        }
-
+        $is_all= $request_data['is_all'] ?? null;
         if(isset($request_data['in_search'])&&$request_data['in_search']!=''){
             $where = [
                 //['part_name','like',"%".$request_data['in_search']."%"],//TODO 需要更改
