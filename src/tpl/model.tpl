@@ -55,7 +55,7 @@ class <model> extends Model
                     $res = $this->where($where)->order('<pk>', 'asc')->paginate($page_size);
                 }
         } catch(Exception $e) {
-            return self::Error([],"请求数据失败~",400);
+            return self::Error($e->getError(),"请求数据失败~",400);
         }
         if($res->isEmpty())
         {
@@ -80,7 +80,7 @@ class <model> extends Model
             $res = $this->select($<pk>s);
         } catch(Exception $e) {
 
-            return self::Error([],"查询数据失败~",400);
+            return self::Error($e->getError(),"查询数据失败~",400);
         }
 
         if($res->isEmpty())
@@ -107,7 +107,7 @@ class <model> extends Model
             Db::commit();
         } catch(Exception $e) {
             Db::rollback();
-            return self::Error([],"新增失败~",400);
+            return self::Error($e->getError(),"新增失败~",400);
         }
         return self::Success($this-><pk>,"新增成功~",200);
     }
@@ -134,7 +134,7 @@ class <model> extends Model
             Db::commit();
         } catch(Exception $e) {
             Db::rollback();
-            return self::Error([],"编辑失败~",400);
+            return self::Error($e->getError(),"编辑失败~",400);
         }
         return self::Success($res,"编辑成功~",200);
     }
@@ -155,7 +155,7 @@ class <model> extends Model
             Db::commit();
         } catch(Exception $e) {
             Db::rollback();
-            return self::Error([],"删除失败~",400);
+            return self::Error($e->getError(),"删除失败~",400);
         }
         if($res)
         {

@@ -49,19 +49,14 @@ class <controller> extends BaseController
     public function index(Request $request)
     {
         $request_data=$request->param();
+
         $is_all= $request_data['is_all'] ?? null;
+        $where = [];//TODO 继续添加查询条件
         if(isset($request_data['in_search'])&&$request_data['in_search']!=''){
-            $where = [
-                //['part_name','like',"%".$request_data['in_search']."%"],//TODO 需要更改
-                ];
-            $res = $this->model->get<model>List($where, $this->pageSize,$is_all);
-        }
-        else
-        {
-            $where = [];
-            $res = $this->model->get<model>List($where, $this->pageSize,$is_all);
+            //$where[] = ['part_name','like',"%".$request_data['in_search']."%"];//TODO 需要更改
         }
 
+        $res = $this->model->get<model>List($where, $this->pageSize,$is_all);
         return $res;
     }
 
@@ -77,9 +72,7 @@ class <controller> extends BaseController
     public function read(Request $request)
     {
         $request_data=$request->param();
-        $<pk>=$request_data['<pk>'];
-
-        $res = $this->model->get<model>By<pk>($<pk>);
+        $res = $this->model->get<model>By<pk>($request_data['<pk>']);
         return $res;
     }
 
@@ -110,7 +103,7 @@ class <controller> extends BaseController
      * @Apidoc\Author("<user>")
      * @Apidoc\Title("编辑")
      * @Apidoc\Desc("编辑数据")
-     * @Apidoc\Method("PUT")
+     * @Apidoc\Method("POST")
      * @Apidoc\Tag("开发中")
 <editApidoc>     * @Apidoc\Returned(ref="app<namespace>model\<model>\getReturn")
      */
@@ -133,7 +126,7 @@ class <controller> extends BaseController
      * @Apidoc\Author("<user>")
      * @Apidoc\Title("删除")
      * @Apidoc\Desc("根据<pk>删除数据，支持单条，也支持多条(传数组)")
-     * @Apidoc\Method("DELETE")
+     * @Apidoc\Method("POST")
      * @Apidoc\Tag("开发中")
      * @Apidoc\Param("<pk>", type="int",require=true,default="1", desc="主键")
      * @Apidoc\Returned("data", type="bool", desc="是否删除成功",replaceGlobal=true)

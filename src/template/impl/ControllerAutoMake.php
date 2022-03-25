@@ -132,6 +132,15 @@ class ControllerAutoMake implements IAutoMake
 
         }
         $allowField=VarExporter::export($zd);
+        //组合数组
+        $allowField="[";
+        foreach ($zd as $key => $value)
+        {
+            ($key+1)%5==0? $allowField.="'".$value."'".','."\r\n"."\t\t\t\t\t" :$allowField.="'".$value."'".',';         
+            
+        }
+        $allowField.="]";
+
         $tplContent = str_replace('<allowField>', $allowField, $tplContent);
         //apidoc
 
@@ -140,7 +149,7 @@ class ControllerAutoMake implements IAutoMake
         $zddefault=[];
         $zdms=[];
         foreach ($column as $vo) {
-            if($vo['Key']!='PRI' && $vo['Field']!='create_time' && $vo['Field']!='create_user' && $vo['Field']!='compy_id' )
+            if($vo['Key']!='PRI' && $vo['Field']!='create_time'&& $vo['Field']!='update_time' && $vo['Field']!='create_user' && $vo['Field']!='compy_id' )
             {
                 $zdvalue[]=$vo['Field'];
                 $zdtype[]=$vo['Type'];
