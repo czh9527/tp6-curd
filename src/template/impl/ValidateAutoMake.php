@@ -118,8 +118,8 @@ class ValidateAutoMake implements IAutoMake
 
         $ruleArr = VarExporter::export($rule);
         $attributesArr = VarExporter::export($attributes);
-        $addsArr = VarExporter::export($adds);
-        $editsArr = VarExporter::export($edits);
+        $addsArr = $this->createStr($adds);
+        $editsArr = $this->createStr($edits);
 
         //确定注册的创建时间，创建人等
         $user=get_current_user();
@@ -141,7 +141,18 @@ class ValidateAutoMake implements IAutoMake
         $file =App::getAppPath() . $filePath . DS . 'validate' . DS . $model . '.php';
         return $this->makeFile($file, $tplContent);
     }
+    public function createStr($zd)
+    {
+        //组合数组字符串
+        $str="[";
+        foreach ($zd as $key => $value)
+        {
+            ($key+1)%5==0? $str.="'".$value."'".','."\r\n"."\t\t\t\t\t" :$str.="'".$value."'".',';
 
+        }
+        $str.="]";
+        return $str;
+    }
     public function makeFile($file,$tplContent)
     {
         $output = new Output();

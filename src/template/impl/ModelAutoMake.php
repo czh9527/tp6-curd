@@ -60,8 +60,8 @@ class ModelAutoMake implements IAutoMake
         }
         //处理apidoc中的field数据
         $field='';
-        foreach ($column as $vo) {
-            $field=$field.$vo['Field'].',';
+        foreach ($column as $key=>$value) {
+            ($key+1)%5==0? $field.=$value['Field'].','."\r\n"."\t\t\t" :$field.=$value['Field'].',';
         }
         $tplContent = str_replace('<field>', $field, $tplContent);
 

@@ -131,7 +131,6 @@ class ControllerAutoMake implements IAutoMake
             }
 
         }
-        $allowField=VarExporter::export($zd);
         //组合数组
         $allowField="[";
         foreach ($zd as $key => $value)
