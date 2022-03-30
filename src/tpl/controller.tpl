@@ -8,7 +8,6 @@
 namespace app<namespace>controller;
 
 use app<namespace>exception\BaseController;
-use app<namespace>validate\<model> as <model>Validate;
 use think\exception\ValidateException;
 use think\Request;
 use think\facade\Db;
@@ -56,8 +55,7 @@ class <controller> extends BaseController
             //$where[] = ['part_name','like',"%".$request_data['in_search']."%"];//TODO 需要更改
         }
 
-        $res = $this->model->get<model>List($where, $this->pageSize,$is_all);
-        return $res;
+        return $this->model->get<model>List($where, $this->pageSize,$is_all);
     }
 
 	/**
@@ -72,8 +70,7 @@ class <controller> extends BaseController
     public function read(Request $request)
     {
         $request_data=$request->param();
-        $res = $this->model->get<model>By<pk>($request_data['<pk>']);
-        return $res;
+        return $this->model->get<model>By<pk>($request_data['<pk>']);
     }
 
     /**
@@ -90,13 +87,12 @@ class <controller> extends BaseController
 
         // 检验完整性
         try {
-            validate(<model>Validate::class)->scene('add')->check($request_data);
+            validate(\app<namespace>validate\<model>::class)->scene('add')->check($request_data);
         } catch (ValidateException $e) {
             return self::Error([],$e->getError(),400);
         }
         $allowField=<allowField>;
-        $res = $this->model->add<model>($request_data,$allowField);
-        return $res;
+        return $this->model->add<model>($request_data,$allowField);
     }
 
     /**
@@ -113,13 +109,12 @@ class <controller> extends BaseController
 
         // 检验完整性
         try {
-            validate(<model>Validate::class)->scene('edit')->check($request_data);
+            validate(\app<namespace>validate\<model>::class)->scene('edit')->check($request_data);
         } catch (ValidateException $e) {
             return self::Error([],$e->getError(),400);
         }
         $allowField=<allowField>;
-        $res = $this->model->edit<model>($request_data,$allowField);
-        return $res;
+        return $this->model->edit<model>($request_data,$allowField);
     }
 
     /**
@@ -146,7 +141,6 @@ class <controller> extends BaseController
         $request_data=$request->param();
         //读取excel文件
         $file_name = $request_data['path'];
-        $objPHPExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 
         $obj_PHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load($file_name);  //加载文件内容,编码utf-8
         $excel_array = $obj_PHPExcel->getsheet(0)->toArray();   //转换为数组格式

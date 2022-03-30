@@ -4,5 +4,5 @@
     */
     protected function check<table>($value)
     {
-        return \app\admin\model\<table>::find($value)!=null?true:'<foreignName>不存在';
+        return \app<namespace>model\<table>::find($value)!=null?true:'<foreignName>不存在';
     }

@@ -32,8 +32,8 @@ class <model> extends Model
     */
     public static function onBeforeInsert($data)// TODO 是否需要下面数据
     {
-        $data['compy_id']=request()->userinfo['compy_id'];
-        $data['create_user']=request()->userinfo['aud'];
+        $data['compy_id']=getCurrentUserInfo('compy_id')??null;
+        $data['create_user']=getCurrentUserInfo('phone')??null;
     }
     <frelationModel><relationModel><getAllListByPid>
     /**
@@ -41,6 +41,7 @@ class <model> extends Model
 	* Author: <user>
     * @param $where
     * @param $page_size
+    * @param $is_all
     * @return \think\Response
     */
     public function get<model>List($where, $page_size,$is_all)
