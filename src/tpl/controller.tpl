@@ -50,7 +50,9 @@ class <controller> extends BaseController
         $request_data=$request->param();
 
         $is_all= $request_data['is_all'] ?? null;
-        $where = [];//TODO 继续添加查询条件
+        $where = [
+                    [],//TODO 继续添加查询条件
+                ];
         if(isset($request_data['in_search'])&&$request_data['in_search']!=''){
             //$where[] = ['part_name','like',"%".$request_data['in_search']."%"];//TODO 需要更改
         }
