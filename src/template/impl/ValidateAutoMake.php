@@ -53,6 +53,8 @@ class ValidateAutoMake implements IAutoMake
                 break;
             }
         }
+        $adds=[];
+        $edits=[];
         foreach ($column as $vo) {
             if($vo['Field']!='create_time'&&$vo['Field']!='update_time' && $vo['Field']!='create_user' && $vo['Field']!='compy_id') {
                 //编辑json
