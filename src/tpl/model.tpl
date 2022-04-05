@@ -24,7 +24,7 @@ class <model> extends Model
     * apidoc注释获取
     */
     public function getReturn(){ }
-    //@Field("<field>")//如果只需要部分注释，请用这个单独写
+    /** @Field("<field>")//如果只需要部分注释，请用这个单独写*/
 
     /**
     * Notes: 新增数据前

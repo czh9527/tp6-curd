@@ -223,54 +223,27 @@ class ControllerAutoMake implements IAutoMake
         foreach ($column as $vo) {
             $zdvalue[]=$vo['Field'];
             $zdtype[]=$vo['Type'];
-
             $zdms[]=$vo['Comment'];
 
         }
-        $btdataData="";
-        $btCenterData="";
-        $btColomnCenterData="";
-        $dygWidthData="";
-        $addTableDataData="";
         $paramData="";
+        $excel_head_data='';
+        $excel_key_data='';
         for($i=0;$i<count($zdvalue);$i++)
         {
-            $zm = $this->IntToChr($i);
             //处理
             $param='
                 $param[\''.$zdvalue[$i].'\']=$excel_array[$i]['.$i.'];';
-
-            $btdata="
-            ->setCellValue('".$zm."1', '".$zdms[$i]."')";
-
-            $btCenter='
-            $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'1'.'\')->applyFromArray($styleArray);';
-
-            $btColomnCenter='
-            $objPHPExcel->setActiveSheetIndex(0)->getStyle(\''.$zm.'\')->applyFromArray($styleArray);';
-
-            $dygWidth='
-            $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension(\''.$zm.'\')->setWidth(10);';
-
-            $addTableData='
-                $objPHPExcel->getActiveSheet()->setCellValue(\''.$zm.'\' . ($i + 2), $con[$i][\''.$zdvalue[$i].'\']);';
-
             $paramData=$paramData.$param;
-            $btdataData=$btdataData.$btdata;
-            $btCenterData=$btCenterData.$btCenter;
-            $btColomnCenterData=$btColomnCenterData.$btColomnCenter;
-            $dygWidthData=$dygWidthData.$dygWidth;
-            $addTableDataData=$addTableDataData.$addTableData;
         }
-        $tplContent = str_replace('<param>', $paramData, $tplContent);
-        $tplContent = str_replace('<btdata>', $btdataData, $tplContent);
-        $tplContent = str_replace('<btCenter>', $btCenterData, $tplContent);
-        $tplContent = str_replace('<btColomnCenter>', $btColomnCenterData, $tplContent);
-        $tplContent = str_replace('<dygWidth>', $dygWidthData, $tplContent);
-        $tplContent = str_replace('<addTableData>', $addTableDataData, $tplContent);
+        $excel_zm_data='A1'.':'.$this->IntToChr(count($zdvalue)).'1';
+        $excel_head_data=$this->createStr($zdms);
+        $excel_key_data=$this->createStr($zdvalue);
         
-
-
+        $tplContent = str_replace('<param>', $paramData, $tplContent);
+        $tplContent = str_replace('<excel_head>', $excel_head_data, $tplContent);
+        $tplContent = str_replace('<excel_key>', $excel_key_data, $tplContent);
+        $tplContent = str_replace('<excel_zm>', $excel_zm_data, $tplContent);
 
         $file =App::getAppPath() . $filePath . DS . 'controller' . DS . $controller . '.php';
         return $this->makeFile($file, $tplContent);
@@ -302,5 +275,17 @@ class ControllerAutoMake implements IAutoMake
             }
         }
         return $_indexCache[$pColumnIndex];
+    }
+    public function createStr($zd)
+    {
+        //组合数组字符串
+        $str="[";
+        foreach ($zd as $key => $value)
+        {
+            ($key+1)%5==0? $str.="'".$value."'".','."\r\n"."\t\t\t\t" :$str.="'".$value."'".',';
+
+        }
+        $str.="]";
+        return $str;
     }
 }

@@ -51,7 +51,7 @@ class <controller> extends BaseController
 
         $is_all= $request_data['is_all'] ?? null;
         $where = [
-                    [],//TODO 继续添加查询条件
+                    //TODO 继续添加查询条件
                 ];
         if(isset($request_data['in_search'])&&$request_data['in_search']!=''){
             //$where[] = ['part_name','like',"%".$request_data['in_search']."%"];//TODO 需要更改
@@ -205,44 +205,22 @@ class <controller> extends BaseController
     public function output(Request $request)
     {
         $res=$this->index($request);
-        // 1.选取表中要输出数据
-        $con = $res->getData()['data'];
+        // 选取表中要输出数据
+        $data = $res->getData()['data'];
+		 //设置表头：
+        $head = <excel_head>;
+        //数据中对应的字段，用于读取相应数据：
+        $keys = <excel_key>;
 
-        //3.实例化PHPExcel类
-        $objPHPExcel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-        //4.激活当前的sheet表
-        $objPHPExcel->setActiveSheetIndex(0);
-        //5.设置表格头（即excel表格的第一行）
-        $objPHPExcel->setActiveSheetIndex(0)<btdata>;
+        $this->spreadsheet= createSpreadSheet(['主表']);
+        $this->spreadsheet= importToSheet($this->spreadsheet,$data,$head, $keys);//导入数据
+        //自定义一些数据和样式  TODO 做一些自定义 
+        $this->spreadsheet->setActiveSheetIndex(0);
+        $objSheet = $this->spreadsheet->getActiveSheet();
+        $objSheet->getStyle('<excel_zm>')->getFont()->setBold(true)->setName('宋体')
+            ->setSize(12);
 
-        $styleArray = [
-            'alignment' => [
-                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-            ],
-        ];
-
-        // 设置表格头水平居中<btCenter>
-
-        //设置列水平居中<btColomnCenter>
-
-        //设置单元格宽度<dygWidth>
-
-        //6.循环刚取出来的数组，将数据逐一添加到excel表格。
-        for ($i = 0; $i < count($con); $i++) { <addTableData>
-        }
-        //7.设置保存的Excel表格名称
-        $filename = '<model>-' . date('Y-m-d G:i:s', time()) . '.xls';
-        //8.设置当前激活的sheet表格名称
-        $objPHPExcel->getActiveSheet()->setTitle('<tableIntroduce>');
-        //9.设置浏览器窗口下载表格
-        header("Content-Type: application/force-download");
-        header("Content-Type: application/octet-stream");
-        header("Content-Type: application/download");
-        header('Content-Disposition:inline;filename="' . $filename . '"');
-        //生成excel文件
-        $objWriter = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($objPHPExcel, 'Xls');
-        //下载文件在浏览器窗口
-        $objWriter->save('php://output');
-        exit;
+        $url=exportExcel('<tableIntroduce>',$this->spreadsheet);
+        return self::Success($url,'导出成功~',200);
     }
 }
