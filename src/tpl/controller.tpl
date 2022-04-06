@@ -211,16 +211,19 @@ class <controller> extends BaseController
         $head = <excel_head>;
         //数据中对应的字段，用于读取相应数据：
         $keys = <excel_key>;
+        $styleArray =[
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,],
+            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+        ];//设置默认样式
 
-        $this->spreadsheet= createSpreadSheet(['主表']);
-        $this->spreadsheet= importToSheet($this->spreadsheet,$data,$head, $keys);//导入数据
+        $this->spreadsheet= importToSheet('主表',$data,$head,$keys,$styleArray);//导入数据
         //自定义一些数据和样式  TODO 做一些自定义 
         $this->spreadsheet->setActiveSheetIndex(0);
         $objSheet = $this->spreadsheet->getActiveSheet();
-        $objSheet->getStyle('<excel_zm>')->getFont()->setBold(true)->setName('宋体')
+        $objSheet->getStyle('A1:'.IntToChr(count($head)).'1')->getFont()->setBold(true)->setName('宋体')
             ->setSize(12);
 
-        $url=exportExcel('<tableIntroduce>',$this->spreadsheet);
+        $url=exportExcel('<tableIntroduce>',$this->spreadsheet);//导出excel
         return self::Success($url,'导出成功~',200);
     }
 }

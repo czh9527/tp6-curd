@@ -236,14 +236,12 @@ class ControllerAutoMake implements IAutoMake
                 $param[\''.$zdvalue[$i].'\']=$excel_array[$i]['.$i.'];';
             $paramData=$paramData.$param;
         }
-        $excel_zm_data='A1'.':'.$this->IntToChr(count($zdvalue)).'1';
         $excel_head_data=$this->createStr($zdms);
         $excel_key_data=$this->createStr($zdvalue);
         
         $tplContent = str_replace('<param>', $paramData, $tplContent);
         $tplContent = str_replace('<excel_head>', $excel_head_data, $tplContent);
         $tplContent = str_replace('<excel_key>', $excel_key_data, $tplContent);
-        $tplContent = str_replace('<excel_zm>', $excel_zm_data, $tplContent);
 
         $file =App::getAppPath() . $filePath . DS . 'controller' . DS . $controller . '.php';
         return $this->makeFile($file, $tplContent);
