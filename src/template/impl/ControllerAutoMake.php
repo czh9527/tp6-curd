@@ -77,7 +77,7 @@ class ControllerAutoMake implements IAutoMake
     {
         \$request_data=\$request->param();
         return  \$this->model->del<model>By<pk>(\$request_data['<pk>']);
-   }";
+    }";
         $deleteHavePid="    
     public function del(Request \$request)
     {
