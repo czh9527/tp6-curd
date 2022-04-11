@@ -107,7 +107,7 @@ class ControllerAutoMake implements IAutoMake
         $this->model->childList[]=$request_data[\'id\'];//加入自己
         //递归所有子，再输出
         $this->model->getAllChildByPid($request_data[\'id\']);
-        return $this->model->get<model>Byids($this->model->childList);
+        return $this->model->get<model>Byid($this->model->childList);
     }';
 
         if($have_pid)

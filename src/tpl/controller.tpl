@@ -54,7 +54,7 @@ class <controller> extends BaseController
                     //TODO 继续添加查询条件
                 ];
         if(isset($request_data['in_search'])&&$request_data['in_search']!=''){
-            //$where[] = ['part_name','like',"%".$request_data['in_search']."%"];//TODO 需要更改
+            //$where[] = ['name','like',"%".$request_data['in_search']."%"];//TODO 需要更改
         }
 
         return $this->model->get<model>List($where, $this->pageSize,$is_all);

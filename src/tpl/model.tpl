@@ -32,8 +32,8 @@ class <model> extends Model
     */
     public static function onBeforeInsert($data)// TODO 是否需要下面数据
     {
-        $data['compy_id']=getCurrentUserInfo('compy_id')??null;
-        $data['create_user']=getCurrentUserInfo('phone')??null;
+            $data['create_user']=\request()->userinfo['aud'];
+            $data['compy_id']=\request()->userinfo['compy_id'];
     }
     <frelationModel><relationModel><getAllListByPid>
     /**
@@ -56,7 +56,7 @@ class <model> extends Model
                     $res = $this->where($where)->order('<pk>', 'asc')->paginate($page_size);
                 }
         } catch(Exception $e) {
-            return self::Error($e->getError(),"请求数据失败~",400);
+            return self::Error($e->getMessage(),"请求数据失败~",400);
         }
         if($res->isEmpty())
         {
@@ -69,7 +69,7 @@ class <model> extends Model
     }
 	
     /**
-    * Notes: 根据<pk>获取信息-自动转换为数组
+    * Notes: 根据<pk>获取信息-可传数组
 	* Author: <user>
     * @param $<pk>
     * @return \think\Response
@@ -77,11 +77,10 @@ class <model> extends Model
     public function get<model>By<pk>($<pk>)
     {
         try {
-            $<pk>s=is_array($<pk>)?$<pk>:Array($<pk>);
-            $res = $this->select($<pk>s);
+            $res = $this->where('$<pk>','in',$<pk>)->select();
         } catch(Exception $e) {
 
-            return self::Error($e->getError(),"查询数据失败~",400);
+            return self::Error($e->getMessage(),"查询数据失败~",400);
         }
 
         if($res->isEmpty())
@@ -108,7 +107,7 @@ class <model> extends Model
             Db::commit();
         } catch(Exception $e) {
             Db::rollback();
-            return self::Error($e->getError(),"新增失败~",400);
+            return self::Error($e->getMessage(),"新增失败~",400);
         }
         return self::Success($this-><pk>,"新增成功~",200);
     }
@@ -135,13 +134,13 @@ class <model> extends Model
             Db::commit();
         } catch(Exception $e) {
             Db::rollback();
-            return self::Error($e->getError(),"编辑失败~",400);
+            return self::Error($e->getMessage(),"编辑失败~",400);
         }
         return self::Success($res,"编辑成功~",200);
     }
 
     /**
-    * Notes: 删除信息-自动转换为数组
+    * Notes: 删除信息-可传数组
 	* Author: <user>
     * @param $<pk>
     * @return \think\Response
@@ -149,14 +148,13 @@ class <model> extends Model
     public function del<model>By<pk>($<pk>)
     {
         Db::startTrans();
-        $<pk>s=is_array($<pk>)?$<pk>:Array($<pk>);
         try { <relationDelModel>
             // TODO 不可删除校验
-            $res=$this->where('<pk>','in',$<pk>s)->delete();
+            $res=$this->where('<pk>','in',$<pk>)->delete();
             Db::commit();
         } catch(Exception $e) {
             Db::rollback();
-            return self::Error($e->getError(),"删除失败~",400);
+            return self::Error($e->getMessage(),"删除失败~",400);
         }
         if($res)
         {
