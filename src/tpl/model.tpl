@@ -77,7 +77,7 @@ class <model> extends Model
     public function get<model>By<pk>($<pk>)
     {
         try {
-            $res = $this->where('$<pk>','in',$<pk>)->select();
+            $res = $this->where('<pk>','in',$<pk>)->select();
         } catch(Exception $e) {
 
             return self::Error($e->getMessage(),"查询数据失败~",400);
